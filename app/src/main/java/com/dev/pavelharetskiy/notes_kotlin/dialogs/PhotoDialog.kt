@@ -46,7 +46,7 @@ class PhotoDialog : DialogFragment() {
     }
 
     private fun OnClickShow() {
-        val uri = DBFlowNoteRepository.getNoteById(idNote)!!.uri
+        val uri = DBFlowNoteRepository.getNoteById(idNote)?.uri
         try {
             if (uri != "") {
                 if (activity != null) {

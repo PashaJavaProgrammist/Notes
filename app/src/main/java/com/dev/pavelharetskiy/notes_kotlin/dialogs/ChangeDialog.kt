@@ -26,8 +26,8 @@ class ChangeDialog : DialogFragment() {
 
     private fun onClickYes() {
         val noteToChange: Note?
-        val title = edTitle!!.text.toString()
-        val body = edBody!!.text.toString()
+        val title = edTitle?.text.toString()
+        val body = edBody?.text.toString()
         if (title != "") {
             noteToChange = DBFlowNoteRepository.getNoteById(idNote)
             noteToChange?.body = body

@@ -38,7 +38,7 @@ class DelOrChangeDialog : DialogFragment() {
     private fun onClickChange() {
         val changeDialog = ChangeDialog()
         changeDialog.id = idNote
-        changeDialog.show(fragmentManager!!, null)
+        changeDialog.show(fragmentManager, null)
         this.dismiss()
     }
 
