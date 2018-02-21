@@ -87,17 +87,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val fragment = NotesFragment()
+        var fragment: NotesFragment? =null
         val notesList: List<Note>?
         when (item.itemId) {
             R.id.nav_all_notes -> {
                 notesList = DBFlowNoteRepository.getAllNotes()
-                fragment.setNoteList(notesList)
+                fragment?.setNoteList(notesList)
                 isFavOnScreen = false
             }
             R.id.nav_favorite_notes -> {
                 notesList = DBFlowNoteRepository.getFavoriteNotes()
-                fragment.setNoteList(notesList)
+                fragment?.setNoteList(notesList)
                 isFavOnScreen = true
             }
             else -> isFavOnScreen = false
@@ -185,7 +185,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //Metods
     //===================================================//
 
-    fun doTransaction(fragment: Fragment) {
+    fun doTransaction(fragment: NotesFragment?) {
         try {
             val ft = supportFragmentManager.beginTransaction()
             ft.replace(R.id.frameForFragments, fragment)

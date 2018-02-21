@@ -48,8 +48,7 @@ class CreateDialog : DialogFragment() {
         val titleNote = edTitle?.text.toString()
         val bodyNote = edBody?.text.toString()
         if (titleNote != "") {
-            val note = Note(0, titleNote, bodyNote, null, System.currentTimeMillis())
-            DBFlowNoteRepository.createNote(note)
+            DBFlowNoteRepository.createNote(titleNote, bodyNote)
             if (activity != null) {
                 (activity as MainActivity).updateScreen()
             }

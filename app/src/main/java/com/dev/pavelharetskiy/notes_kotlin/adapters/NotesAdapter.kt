@@ -30,7 +30,6 @@ class NotesAdapter(var notesList: List<Note>?) : RecyclerView.Adapter<NotesHolde
     }
 
     fun setNoteList(notesList: List<Note>) {
-        this.notesList = notesList;
-        notifyDataSetChanged();
+        this.notesList = notesList
     }
 }

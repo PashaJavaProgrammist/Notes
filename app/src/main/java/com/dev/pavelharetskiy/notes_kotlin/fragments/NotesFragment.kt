@@ -30,6 +30,9 @@ class NotesFragment : Fragment() {
 
     fun setNoteList(noteList: List<Note>?) {
         this.noteList = noteList
-        notesAdapter?.notesList = noteList
+        if (noteList != null) {
+            notesAdapter?.setNoteList(noteList)
+            notesAdapter?.notifyDataSetChanged()
+        }
     }
 }

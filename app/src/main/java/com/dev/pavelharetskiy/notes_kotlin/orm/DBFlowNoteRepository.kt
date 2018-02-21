@@ -5,7 +5,7 @@ import com.raizlabs.android.dbflow.sql.language.Select
 
 object DBFlowNoteRepository {
 
-    //private val denominator = 1000
+    private val denominator = 1000
 
     fun getAllNotes(): List<Note>? {
         return Select().from(Note::class.java).queryList()
@@ -29,8 +29,9 @@ object DBFlowNoteRepository {
         getNoteById(id)?.delete()
     }
 
-    fun createNote(note: Note) {
-        // note.id = System.currentTimeMillis().toInt() / denominator
+    fun createNote(title: String?, body: String) {
+        val id = System.currentTimeMillis().toInt() / denominator
+        val note = Note(id, title, body, null, System.currentTimeMillis())
         note.save()
     }
 }
