@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Notes</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">Title</string>
+    <string name="body">Body</string>
+    <string name="time">Time</string>
+    <string name="favorite_notes">Favorite notes</string>
+    <string name="all_notes">All notes</string>
+    <string name="notes">Notes</string>
+    <string name="test_app_for_apalon">Test app for Apalon</string>
+    <string name="enter_title">Enter Title</string>
+    <string name="enter_body">Enter Body</string>
+    <string name="about">About Developer</string>
+    <string name="about1">Haretskiy Pavel</string>
+    <string name="about2">https://github.com/PashaJavaProgrammist</string>
+    <string name="about3">+375-29-358-16-88</string>
+    <string name="about4">pasha280294@gmail.com</string>
+    <string name="create_note">Create note?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="choose_action">Choose action..</string>
+    <string name="show_photo">Show photo</string>
+    <string name="add_photo_from_file_system">Add Photo \nfrom File System</string>
+    <string name="make_photo_from_camera">Make Photo \nfrom Camera</string>
+    <string name="change">Change</string>
+    <string name="exit">Exit</string>
+    <string name="change_note">Change note?</string>
+    <string name="delete">Delete</string>
+    <string name="delete_photo">Delete Photo</string>
+</resources>
