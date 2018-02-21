@@ -7,38 +7,41 @@ import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.structure.BaseModel
 
 @Table(name = "notes", database = NoteDatabase::class)
-class Note : BaseModel {
+data class Note(@Column(name = "Id")
+                @PrimaryKey(autoincrement = true)
+                var id: Int = 0,
+                @Column(name = "Title")
+                var title: String? = null,
+                @Column(name = "Body")
+                var body: String? = null,
+                @Column(name = "Uri")
+                var uri: String? = null,
+                @Column(name = "Date")
+                var date: Long = 0,
+                @Column(name = "IsFav")
+                var isFavorite: Int = 0) : BaseModel() {
+
+    fun getIsFavorite(): Int{
+        return isFavorite
+    }
+
+    fun setIsFavorite(isFavorite: Int){
+        this.isFavorite=isFavorite
+    }
 
     companion object {
         val FAVORITE = 1
     }
 
-    @Column(name = "Id")
-    @PrimaryKey(autoincrement = true)
-    var id: Int = 0
 
-    @Column(name = "Title")
-    var title: String? = null
+//    constructor() {}
+//
+//    constructor(title: String, body: String, date: Long, isFavorite: Int = 0) {
+//        this.title = title
+//        this.body = body
+//        this.date = date
+//        this.isFavorite = isFavorite
+//    }
 
-    @Column(name = "Body")
-    var body: String? = null
-
-    @Column(name = "Uri")
-    var uri: String? = null
-
-    @Column(name = "Date")
-    var date: Long = 0
-
-    @Column(name = "IsFav")
-    var isFav: Int = 0
-
-    constructor() {}
-
-    constructor(title: String, body: String, date: Long, isFav: Int = 0) {
-        this.title = title
-        this.body = body
-        this.date = date
-        this.isFav = isFav
-    }
 
 }

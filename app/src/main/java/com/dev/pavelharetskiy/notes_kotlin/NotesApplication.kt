@@ -1,11 +1,11 @@
-package com.dev.pavelharetskiy.notes_kotlin.app
+package com.dev.pavelharetskiy.notes_kotlin
 
 import android.app.Application
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 
 
-class MyApplication : Application() {
+class NotesApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -17,3 +17,4 @@ class MyApplication : Application() {
         super.onTerminate()
     }
 }
+

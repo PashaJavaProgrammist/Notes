@@ -4,7 +4,6 @@ import com.dev.pavelharetskiy.notes_kotlin.orm.DBFlowNoteRepository
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.LayoutInflater
-import android.support.annotation.Nullable
 import android.support.v4.app.DialogFragment
 import android.view.View
 import android.widget.Toast
@@ -14,11 +13,7 @@ import com.dev.pavelharetskiy.notes_kotlin.R
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
 import kotlinx.android.synthetic.main.fragment_create_dialog.view.*
 
-
 class CreateDialog : DialogFragment() {
-
-    private var idNote = -1
-    private val instId = "idTOsave"
 
     private var btYes: TextView? = null
 
@@ -31,19 +26,6 @@ class CreateDialog : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isCancelable = false
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(instId, idNote)
-    }
-
-    override fun onViewStateRestored(@Nullable savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        if (savedInstanceState != null) {
-            idNote = savedInstanceState.getInt(instId)
-            updateViews()
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -59,30 +41,17 @@ class CreateDialog : DialogFragment() {
         btNo?.setOnClickListener {
             onClickNo()
         }
-        updateViews()
         return v
     }
 
-    private fun updateViews() {
-        if (idNote != -1) {
-            val noteForChange = DBFlowNoteRepository.getNoteById(idNote)
-            edTitle?.text = noteForChange?.title
-            edBody?.text = noteForChange?.body
-        }
-    }
-
     private fun onClickYes() {
-        val noteToChange: Note?
-        val title = edTitle?.text.toString()
-        val body = edBody?.text.toString()
-        if (title != "") {
-            noteToChange = DBFlowNoteRepository.getNoteById(idNote)
-            noteToChange?.body = body
-            noteToChange?.title = title
-            DBFlowNoteRepository.updateNote(noteToChange)
-            Toast.makeText(activity, "Note is changed", Toast.LENGTH_SHORT).show()
+        val titleNote = edTitle?.text.toString()
+        val bodyNote = edBody?.text.toString()
+        if (titleNote != "") {
+            val note = Note(0, titleNote, bodyNote, null, System.currentTimeMillis())
+            DBFlowNoteRepository.createNote(note)
             if (activity != null) {
-                (activity as MainActivity).setListNotes()
+                (activity as MainActivity).updateScreen()
             }
             this.dismiss()
         } else {

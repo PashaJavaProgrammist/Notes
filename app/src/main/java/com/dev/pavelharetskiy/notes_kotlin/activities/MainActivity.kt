@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val fragment = NotesFragment()
-        val notesList: List<Note>
+        val notesList: List<Note>?
         when (item.itemId) {
             R.id.nav_all_notes -> {
                 notesList = DBFlowNoteRepository.getAllNotes()
@@ -109,13 +109,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     public override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState!!.putBoolean("isFav", isFavOnScreen)
+        outState!!.putBoolean("isFavorite", isFavOnScreen)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         if (savedInstanceState != null) {
-            isFavOnScreen = savedInstanceState.getBoolean("isFav", false)
+            isFavOnScreen = savedInstanceState.getBoolean("isFavorite", false)
         }
     }
 

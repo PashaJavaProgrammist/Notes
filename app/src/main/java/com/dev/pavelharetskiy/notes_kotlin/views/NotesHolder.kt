@@ -35,9 +35,9 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
             cardView.tvTime.text = sdf.format(Date(note.date))
         }
         cardView.tvIdInLL.text = note?.id.toString()
-        if (note?.isFav == 1) {
+        if (note?.isFavorite == 1) {
             cardView.iv_isFav.setBackgroundResource(android.R.drawable.btn_star_big_on)
-        } else if (note?.isFav == 0) {
+        } else if (note?.isFavorite == 0) {
             cardView.iv_isFav.setBackgroundResource(android.R.drawable.btn_star_big_off)
         }
         if (note != null) {
@@ -77,8 +77,8 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
     private fun onClickFav(imageView: ImageView) {
         val idNote = Integer.parseInt(imageView.getContentDescription() as String)
         val note = DBFlowNoteRepository.getNoteById(idNote)
-        if (note?.isFav == 1) note.isFav = 0
-        else if (note?.isFav == 0) note.isFav = 1
+        if (note?.isFavorite == 1) note.isFavorite = 0
+        else if (note?.isFavorite == 0) note.isFavorite = 1
         DBFlowNoteRepository.updateNote(note)
         (context as MainActivity).setListNotes()
     }
