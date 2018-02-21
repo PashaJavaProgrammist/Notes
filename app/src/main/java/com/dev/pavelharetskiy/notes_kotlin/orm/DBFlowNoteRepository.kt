@@ -1,6 +1,7 @@
 package com.dev.pavelharetskiy.notes_kotlin.orm
 
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
+import com.dev.pavelharetskiy.notes_kotlin.models.Note_Table
 import com.raizlabs.android.dbflow.sql.language.Select
 
 object DBFlowNoteRepository {
@@ -12,13 +13,11 @@ object DBFlowNoteRepository {
     }
 
     fun getFavoriteNotes(): List<Note>? {
-        //   return Select().from(Note::class.java).where(Note_Table.IsFav.eq(Note.FAVORITE)).queryList()
-        return getAllNotes()?.filter { note -> note.isFavorite == Note.FAVORITE }
+        return Select().from(Note::class.java).where(Note_Table.IsFav.eq(Note.FAVORITE)).queryList()
     }
 
     fun getNoteById(id: Int): Note? {
-        // return Select().from(Note::class.java).where(Note_Table.Id.`is`(id)).querySingle()
-        return getAllNotes()?.filter { note -> note.id == id }?.get(0)
+        return Select().from(Note::class.java).where(Note_Table.Id.`is`(id)).querySingle()
     }
 
     fun updateNote(note: Note?) {
