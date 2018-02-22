@@ -19,7 +19,6 @@ import android.content.Intent
 import android.provider.Settings
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
 import com.dev.pavelharetskiy.notes_kotlin.orm.DBFlowNoteRepository
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.provider.MediaStore
 import android.widget.Toast
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        var fragment: NotesFragment? =null
+        fragment = NotesFragment()
         val notesList: List<Note>?
         when (item.itemId) {
             R.id.nav_all_notes -> {
@@ -109,7 +108,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     public override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState!!.putBoolean("isFavorite", isFavOnScreen)
+        outState?.putBoolean("isFavorite", isFavOnScreen)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -121,12 +120,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResume() {
         super.onResume()
-        val fragment = NotesFragment()
+        fragment = NotesFragment()
         try {
             if (!isFavOnScreen) {
-                fragment.setNoteList(DBFlowNoteRepository.getAllNotes())
+                fragment?.setNoteList(DBFlowNoteRepository.getAllNotes())
             } else if (isFavOnScreen) {
-                fragment.setNoteList(DBFlowNoteRepository.getFavoriteNotes())
+                fragment?.setNoteList(DBFlowNoteRepository.getFavoriteNotes())
             }
         } catch (ex: Exception) {
             //error
@@ -218,7 +217,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //startActivity(new Intent(this, DetailActivity.class).putExtra("id", id));
 
-        val uriPath = DBFlowNoteRepository.getNoteById(id)!!.uri
+        val uriPath = DBFlowNoteRepository.getNoteById(id)?.uri
         if (uriPath != null) {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriPath))
             startActivity(intent)
@@ -257,11 +256,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun createDirectory() {//создаем папку для фото
-        val directory = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "NotesApp")
-        if (!directory.exists())
-
-            directory.mkdirs()
+        directory = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "NotesAppKotlin")
+        if (!directory!!.exists()) directory?.mkdirs()
     }
 
     fun updateScreen() {
