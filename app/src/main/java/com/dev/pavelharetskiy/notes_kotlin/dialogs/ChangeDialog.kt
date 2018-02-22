@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_create_dialog.view.*
 
 
 class ChangeDialog : DialogFragment() {
-    var idNote = -1
+    private var idNote = -1
     private val instId = "idTOsave"
 
     private var btYes: TextView? = null
@@ -88,7 +88,7 @@ class ChangeDialog : DialogFragment() {
         if (idNote != -1) {
             val noteForChange = getNoteById(idNote)
             edTitle?.text = noteForChange?.title
-            edBody?.setText(noteForChange?.body)
+            edBody?.text = noteForChange?.body
         }
     }
 }

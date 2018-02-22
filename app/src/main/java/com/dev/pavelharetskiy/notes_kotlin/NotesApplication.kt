@@ -17,4 +17,3 @@ class NotesApplication : Application() {
         super.onTerminate()
     }
 }
-

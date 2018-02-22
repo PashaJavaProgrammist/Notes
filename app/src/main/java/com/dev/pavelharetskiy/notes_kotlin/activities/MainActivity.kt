@@ -1,5 +1,4 @@
 package com.dev.pavelharetskiy.notes_kotlin.activities
-
 import android.app.Activity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -25,11 +24,10 @@ import android.os.Environment
 import com.dev.pavelharetskiy.notes_kotlin.dialogs.CreateDialog
 import com.dev.pavelharetskiy.notes_kotlin.orm.*
 
-
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val REQUEST_CODE_PHOTO = 4554
-    private val REQUEST_CODE_PICK_PHOTO = 4124
+    private val requestCodePhotoMake = 4554
+    private val requestCodeFotoPick = 4124
 
     private var fragment: NotesFragment? = null
     private var isFavOnScreen = false
@@ -43,6 +41,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
 
         spref = getPreferences(MODE_PRIVATE)
+
         if (spref.contains("idToChange")) idToChangePhoto = spref.getInt("idToChange", -1)
         if (spref.contains("uri")) uri = Uri.parse(spref.getString("uri", ""))
 
@@ -143,14 +142,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {//возврат результата от камеры
-        if (requestCode == REQUEST_CODE_PHOTO) {//результат с камеры
+        if (requestCode == requestCodePhotoMake) {//результат с камеры
             if (resultCode == Activity.RESULT_OK) {
                 if (resultIntent == null) {
                     //добавлеие
                     try {
                         val note = getNoteById(idToChangePhoto)
-                        val uriStr: String
-                        uriStr = if (uri.toString()[0] == '/') {
+                        val uriStr: String = if (uri.toString()[0] == '/') {
                             "file://" + uri.toString()
                         } else {
                             uri.toString()
@@ -165,7 +163,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 }
             }
-        } else if (requestCode == REQUEST_CODE_PICK_PHOTO) {//возврат результата от выбора фото
+        } else if (requestCode == requestCodeFotoPick) {//возврат результата от выбора фото
             if (resultCode == Activity.RESULT_OK) {
                 val note = getNoteById(idToChangePhoto)
                 if (resultIntent != null) {
@@ -228,7 +226,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         idToChangePhoto = id
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)//запускаем камеру с помощью интента
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-        startActivityForResult(intent, REQUEST_CODE_PHOTO)
+        startActivityForResult(intent, requestCodePhotoMake)
     }
 
     fun delPhotoNote(id: Int) {
@@ -243,12 +241,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val photoAddIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         photoAddIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
 
-        startActivityForResult(photoAddIntent, REQUEST_CODE_PICK_PHOTO)
+        startActivityForResult(photoAddIntent, requestCodeFotoPick)
     }
 
     private fun generateFileUri() {//генерируем путь к фото
         createDirectory()
-        val file = File(directory.getPath() + "/" + "photo_" + System.currentTimeMillis() + ".jpg")
+        val file = File(directory.path + "/" + "photo_" + System.currentTimeMillis() + ".jpg")
         uri = Uri.fromFile(file)
     }
 

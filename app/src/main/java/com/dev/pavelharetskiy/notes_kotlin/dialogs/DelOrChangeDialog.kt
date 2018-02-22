@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_del_change_dialog.view.*
 
 class DelOrChangeDialog : DialogFragment() {
     var idNote: Int = 0
-    private val INSTID = "idtosave"
+    private val istId = "idtosave"
 
     private var tvDelete: TextView? = null
     private var tvChange: TextView? = null
@@ -48,13 +48,13 @@ class DelOrChangeDialog : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(INSTID, idNote)
+        outState.putInt(istId, idNote)
     }
 
     override fun onViewStateRestored(@Nullable savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         if (savedInstanceState != null) {
-            idNote = savedInstanceState.getInt(INSTID)
+            idNote = savedInstanceState.getInt(istId)
         }
     }
 

@@ -30,7 +30,7 @@ data class Note(@Column(name = "Id")
     }//dont't compile without this (Why???)
 
     companion object {
-        val FAVORITE = 1
+        const val FAVORITE = 1
     }
 
     constructor(title: String?, body: String, date: Long) : this() {
@@ -38,6 +38,4 @@ data class Note(@Column(name = "Id")
         this.body = body
         this.date = date
     }
-
-
 }
