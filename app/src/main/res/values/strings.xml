@@ -17,12 +17,7 @@
     <string name="test_app_for_apalon">Test app for Apalon</string>
     <string name="enter_title">Enter Title</string>
     <string name="enter_body">Enter Body</string>
-    <string name="about">About Developer</string>
-    <string name="about1">Haretskiy Pavel</string>
-    <string name="about2">https://github.com/PashaJavaProgrammist</string>
-    <string name="about3">+375-29-358-16-88</string>
-    <string name="about4">pasha280294@gmail.com</string>
-    <string name="create_note">Create note?</string>
+    <string name="create_note">Creating note</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="choose_action">Choose action..</string>

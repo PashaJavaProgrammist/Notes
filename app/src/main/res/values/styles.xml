@@ -13,6 +13,21 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="StatefulButtonRoundedBorder">
+        <item name="android:textColor">@drawable/confirmation_button_text_color_selector</item>
+        <item name="android:background">@drawable/confirmation_button_background_selector</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">@dimen/button_accept_left_padding</item>
+        <item name="android:paddingTop">@dimen/button_accept_top_padding</item>
+        <item name="android:paddingRight">@dimen/button_accept_right_padding</item>
+        <item name="android:paddingBottom">@dimen/button_accept_bottom_padding</item>
+    </style>
+
+    <style name="StatefulButtonRoundedBorder.ReverseStates">
+        <item name="android:textColor">@drawable/button_text_color_selector_reversed</item>
+        <item name="android:background">@drawable/button_background_selector_reversed</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

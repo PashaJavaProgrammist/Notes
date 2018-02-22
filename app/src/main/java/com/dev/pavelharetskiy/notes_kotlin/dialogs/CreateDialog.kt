@@ -28,7 +28,6 @@ class CreateDialog : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        dialog.setTitle(R.string.change_note)
         val v = inflater.inflate(R.layout.fragment_create_dialog, container, false)
         edBody = v.edBodyCreate
         edTitle = v.edTitleCreate

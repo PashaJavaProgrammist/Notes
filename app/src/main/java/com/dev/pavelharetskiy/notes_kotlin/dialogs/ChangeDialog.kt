@@ -80,6 +80,8 @@ class ChangeDialog : DialogFragment() {
         btNo?.setOnClickListener { onClickNo() }
         edTitle = v.edTitleCreate
         edBody = v.edBodyCreate
+        v.headerDialog.text=getString(R.string.change_note)
+        v.headerDialog.textSize=resources.getDimension(R.dimen.headerDialogSizeText)
         updateViews()
         return v
     }

@@ -5,4 +5,10 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="button_accept_left_padding">5dp</dimen>
+    <dimen name="button_accept_top_padding">5dp</dimen>
+    <dimen name="button_accept_right_padding">5dp</dimen>
+    <dimen name="button_accept_bottom_padding">5dp</dimen>
+    <dimen name="headerDialogSizeText">20dp</dimen>
 </resources>
