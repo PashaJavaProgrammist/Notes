@@ -5,15 +5,6 @@
     android:orientation="vertical"
     tools:context="com.example.maria.notes.dialogs.CreateDialog">
 
-    <TextView
-        android:id="@+id/headerDialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textSize="@dimen/headerDialogSizeText"
-        android:text="@string/create_note"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
