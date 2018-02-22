@@ -18,12 +18,12 @@ import java.io.File
 import android.content.Intent
 import android.provider.Settings
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
-import com.dev.pavelharetskiy.notes_kotlin.orm.DBFlowNoteRepository
 import android.support.v4.app.FragmentTransaction
 import android.provider.MediaStore
 import android.widget.Toast
 import android.os.Environment
 import com.dev.pavelharetskiy.notes_kotlin.dialogs.CreateDialog
+import com.dev.pavelharetskiy.notes_kotlin.orm.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var isFavOnScreen = false
     private var uri: Uri? = null
     private var idToChangePhoto = -1
-    private var directory: File? = null
+    private lateinit var directory: File
     private lateinit var spref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,15 +87,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         fragment = NotesFragment()
-        val notesList: List<Note>?
+        lateinit var notesList: List<Note>
         when (item.itemId) {
             R.id.nav_all_notes -> {
-                notesList = DBFlowNoteRepository.getAllNotes()
+                notesList = getAllNotes()
                 fragment?.setNoteList(notesList)
                 isFavOnScreen = false
             }
             R.id.nav_favorite_notes -> {
-                notesList = DBFlowNoteRepository.getFavoriteNotes()
+                notesList = getFavoriteNotes()
                 fragment?.setNoteList(notesList)
                 isFavOnScreen = true
             }
@@ -123,9 +123,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fragment = NotesFragment()
         try {
             if (!isFavOnScreen) {
-                fragment?.setNoteList(DBFlowNoteRepository.getAllNotes())
+                fragment?.setNoteList(getAllNotes())
             } else if (isFavOnScreen) {
-                fragment?.setNoteList(DBFlowNoteRepository.getFavoriteNotes())
+                fragment?.setNoteList(getFavoriteNotes())
             }
         } catch (ex: Exception) {
             //error
@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onStop()
         val ed = spref.edit()
         if (idToChangePhoto != -1) ed.putInt("idToChange", idToChangePhoto)
-        if (uri != null) ed.putString("uri", uri?.getPath())
+        if (uri != null) ed.putString("uri", uri?.path)
         ed.apply()
     }
 
@@ -148,16 +148,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 if (resultIntent == null) {
                     //добавлеие
                     try {
-                        val note = DBFlowNoteRepository.getNoteById(idToChangePhoto)
+                        val note = getNoteById(idToChangePhoto)
                         val uriStr: String
-                        if (uri.toString()[0] == '/') {
-                            uriStr = "file://" + uri.toString()
+                        uriStr = if (uri.toString()[0] == '/') {
+                            "file://" + uri.toString()
                         } else {
-                            uriStr = uri.toString()
+                            uri.toString()
                         }
 
                         note?.uri = uriStr
-                        DBFlowNoteRepository.updateNote(note)
+                        updateNote(note)
                         setListNotes()
                     } catch (ex: Exception) {
                         //
@@ -167,12 +167,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         } else if (requestCode == REQUEST_CODE_PICK_PHOTO) {//возврат результата от выбора фото
             if (resultCode == Activity.RESULT_OK) {
-                val note = DBFlowNoteRepository.getNoteById(idToChangePhoto)
+                val note = getNoteById(idToChangePhoto)
                 if (resultIntent != null) {
                     val imageUri = resultIntent.data
                     if (imageUri != null) {
                         note?.uri = imageUri.toString()
-                        DBFlowNoteRepository.updateNote(note)
+                        updateNote(note)
                         setListNotes()
                     }
                 }
@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //Metods
     //===================================================//
 
-    fun doTransaction(fragment: NotesFragment?) {
+    private fun doTransaction(fragment: NotesFragment?) {
         try {
             val ft = supportFragmentManager.beginTransaction()
             ft.replace(R.id.frameForFragments, fragment)
@@ -200,9 +200,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         try {
             var notes: List<Note>? = null
             if (isFavOnScreen) {
-                notes = DBFlowNoteRepository.getFavoriteNotes()
+                notes = getFavoriteNotes()
             } else if (!isFavOnScreen) {
-                notes = DBFlowNoteRepository.getAllNotes()
+                notes = getAllNotes()
             }
             if (notes != null && fragment != null) {
                 fragment?.setNoteList(notes)
@@ -214,10 +214,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun startActivityDetail(id: Int) {
-
-        //startActivity(new Intent(this, DetailActivity.class).putExtra("id", id));
-
-        val uriPath = DBFlowNoteRepository.getNoteById(id)?.uri
+        val uriPath = getNoteById(id)?.uri
         if (uriPath != null) {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriPath))
             startActivity(intent)
@@ -235,9 +232,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun delPhotoNote(id: Int) {
-        val note = DBFlowNoteRepository.getNoteById(id)
+        val note = getNoteById(id)
         note?.uri = null
-        DBFlowNoteRepository.updateNote(note)
+        updateNote(note)
         setListNotes()
     }
 
@@ -251,29 +248,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun generateFileUri() {//генерируем путь к фото
         createDirectory()
-        val file = File(directory?.getPath() + "/" + "photo_" + System.currentTimeMillis() + ".jpg")
+        val file = File(directory.getPath() + "/" + "photo_" + System.currentTimeMillis() + ".jpg")
         uri = Uri.fromFile(file)
     }
 
     private fun createDirectory() {//создаем папку для фото
         directory = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "NotesAppKotlin")
-        if (!directory!!.exists()) directory?.mkdirs()
+        if (!directory.exists()) directory.mkdirs()
     }
 
     fun updateScreen() {
         if (fragment != null) {
             try {
                 if (!isFavOnScreen)
-                    fragment?.setNoteList(DBFlowNoteRepository.getAllNotes())
+                    fragment?.setNoteList(getAllNotes())
                 else if (isFavOnScreen)
-                    fragment?.setNoteList(DBFlowNoteRepository.getFavoriteNotes())
+                    fragment?.setNoteList(getFavoriteNotes())
             } catch (ex: Exception) {
                 Toast.makeText(this, "error..", Toast.LENGTH_SHORT).show()
             }
-
         }
     }
-
-
 }

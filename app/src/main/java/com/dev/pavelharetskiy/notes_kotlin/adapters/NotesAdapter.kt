@@ -9,7 +9,7 @@ import com.dev.pavelharetskiy.notes_kotlin.views.NotesHolder
 import com.dev.pavelharetskiy.notes_kotlin.R
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
 
-class NotesAdapter(var notesList: List<Note>?) : RecyclerView.Adapter<NotesHolder>() {
+class NotesAdapter(var notesList: List<Note>) : RecyclerView.Adapter<NotesHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesHolder {
         val context: Context = parent.context
@@ -18,15 +18,11 @@ class NotesAdapter(var notesList: List<Note>?) : RecyclerView.Adapter<NotesHolde
     }
 
     override fun onBindViewHolder(holder: NotesHolder?, position: Int) {
-        holder?.updateHolder(notesList?.get(position))
+        holder?.updateHolder(notesList.get(position))
     }
 
     override fun getItemCount(): Int {
-        if (notesList != null && notesList?.size != null) {
-            return notesList!!.size
-        } else {
-            return 0
-        }
+        return notesList.size
     }
 
     fun setNoteList(notesList: List<Note>) {

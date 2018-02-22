@@ -1,7 +1,6 @@
 package com.dev.pavelharetskiy.notes_kotlin.dialogs
 
 import android.support.v4.app.DialogFragment
-import com.dev.pavelharetskiy.notes_kotlin.orm.DBFlowNoteRepository
 import android.os.Bundle
 import android.support.annotation.Nullable
 import android.view.ViewGroup
@@ -12,6 +11,8 @@ import com.dev.pavelharetskiy.notes_kotlin.activities.MainActivity
 import android.widget.TextView
 import com.dev.pavelharetskiy.notes_kotlin.R
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
+import com.dev.pavelharetskiy.notes_kotlin.orm.getNoteById
+import com.dev.pavelharetskiy.notes_kotlin.orm.updateNote
 import kotlinx.android.synthetic.main.fragment_create_dialog.view.*
 
 
@@ -29,10 +30,10 @@ class ChangeDialog : DialogFragment() {
         val title = edTitle?.text.toString()
         val body = edBody?.text.toString()
         if (title != "") {
-            noteToChange = DBFlowNoteRepository.getNoteById(idNote)
+            noteToChange = getNoteById(idNote)
             noteToChange?.body = body
             noteToChange?.title = title
-            DBFlowNoteRepository.updateNote(noteToChange)
+            updateNote(noteToChange)
             Toast.makeText(activity, "Note is changed", Toast.LENGTH_SHORT).show()
             if (activity != null) {
                 (activity as MainActivity).setListNotes()
@@ -85,7 +86,7 @@ class ChangeDialog : DialogFragment() {
 
     private fun updateViews() {
         if (idNote != -1) {
-            val noteForChange = DBFlowNoteRepository.getNoteById(idNote)
+            val noteForChange = getNoteById(idNote)
             edTitle?.text = noteForChange?.title
             edBody?.setText(noteForChange?.body)
         }

@@ -21,27 +21,23 @@ data class Note(@Column(name = "Id")
                 @Column(name = "IsFav")
                 var isFavorite: Int = 0) : BaseModel() {
 
-    fun getIsFavorite(): Int{
+    fun getIsFavorite(): Int {
         return isFavorite
-    }
+    }//dont't compile without this (Why???)
 
-    fun setIsFavorite(isFavorite: Int){
-        this.isFavorite=isFavorite
-    }
+    fun setIsFavorite(isFavorite: Int) {
+        this.isFavorite = isFavorite
+    }//dont't compile without this (Why???)
 
     companion object {
         val FAVORITE = 1
     }
 
-
-//    constructor() {}
-//
-//    constructor(title: String, body: String, date: Long, isFavorite: Int = 0) {
-//        this.title = title
-//        this.body = body
-//        this.date = date
-//        this.isFavorite = isFavorite
-//    }
+    constructor(title: String?, body: String, date: Long) : this() {
+        this.title = title
+        this.body = body
+        this.date = date
+    }
 
 
 }

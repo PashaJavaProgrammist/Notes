@@ -8,9 +8,9 @@ import android.support.annotation.Nullable
 import android.view.View
 import android.widget.Toast
 import com.dev.pavelharetskiy.notes_kotlin.activities.MainActivity
-import com.dev.pavelharetskiy.notes_kotlin.orm.DBFlowNoteRepository
 import android.widget.LinearLayout
 import com.dev.pavelharetskiy.notes_kotlin.R
+import com.dev.pavelharetskiy.notes_kotlin.orm.getNoteById
 import kotlinx.android.synthetic.main.fragment_photo_dialog.view.*
 
 
@@ -46,7 +46,7 @@ class PhotoDialog : DialogFragment() {
     }
 
     private fun OnClickShow() {
-        val uri = DBFlowNoteRepository.getNoteById(idNote)?.uri
+        val uri = getNoteById(idNote)?.uri
         try {
             if (uri != "") {
                 if (activity != null) {

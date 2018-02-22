@@ -1,6 +1,5 @@
 package com.dev.pavelharetskiy.notes_kotlin.dialogs
 
-import com.dev.pavelharetskiy.notes_kotlin.orm.DBFlowNoteRepository
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.LayoutInflater
@@ -10,7 +9,7 @@ import android.widget.Toast
 import com.dev.pavelharetskiy.notes_kotlin.activities.MainActivity
 import android.widget.TextView
 import com.dev.pavelharetskiy.notes_kotlin.R
-import com.dev.pavelharetskiy.notes_kotlin.models.Note
+import com.dev.pavelharetskiy.notes_kotlin.orm.createNote
 import kotlinx.android.synthetic.main.fragment_create_dialog.view.*
 
 class CreateDialog : DialogFragment() {
@@ -48,7 +47,7 @@ class CreateDialog : DialogFragment() {
         val titleNote = edTitle?.text.toString()
         val bodyNote = edBody?.text.toString()
         if (titleNote != "") {
-            DBFlowNoteRepository.createNote(titleNote, bodyNote)
+            createNote(titleNote, bodyNote)
             if (activity != null) {
                 (activity as MainActivity).updateScreen()
             }

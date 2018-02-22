@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_notes.view.*
 class NotesFragment : Fragment() {
 
     private var notesAdapter: NotesAdapter? = null
-    private var noteList: List<Note>? = null
+    private lateinit var noteList: List<Note>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_notes, container, false)
@@ -28,11 +28,9 @@ class NotesFragment : Fragment() {
         return view
     }
 
-    fun setNoteList(noteList: List<Note>?) {
+    fun setNoteList(noteList: List<Note>) {
         this.noteList = noteList
-        if (noteList != null) {
-            notesAdapter?.setNoteList(noteList)
-            notesAdapter?.notifyDataSetChanged()
-        }
+        notesAdapter?.setNoteList(noteList)
+        notesAdapter?.notifyDataSetChanged()
     }
 }

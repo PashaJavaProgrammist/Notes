@@ -8,11 +8,10 @@ import android.support.annotation.Nullable
 import android.view.View
 import android.widget.Toast
 import com.dev.pavelharetskiy.notes_kotlin.activities.MainActivity
-import com.dev.pavelharetskiy.notes_kotlin.orm.DBFlowNoteRepository
 import android.widget.TextView
 import com.dev.pavelharetskiy.notes_kotlin.R
+import com.dev.pavelharetskiy.notes_kotlin.orm.deleteNoteById
 import kotlinx.android.synthetic.main.fragment_del_change_dialog.view.*
-
 
 class DelOrChangeDialog : DialogFragment() {
     var idNote: Int = 0
@@ -27,7 +26,7 @@ class DelOrChangeDialog : DialogFragment() {
     }
 
     private fun onClickDelete() {
-        DBFlowNoteRepository.deleteNoteById(idNote)
+        deleteNoteById(idNote)
         if (activity != null) {
             (activity as MainActivity).setListNotes()
         }
