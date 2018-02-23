@@ -36,7 +36,7 @@ class ChangeDialog : DialogFragment() {
             updateNote(noteToChange)
             Toast.makeText(activity, "Note is changed", Toast.LENGTH_SHORT).show()
             if (activity != null) {
-                (activity as MainActivity).setListNotes()
+                (activity as MainActivity).updateScreen()
             }
             this.dismiss()
         } else {

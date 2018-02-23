@@ -28,4 +28,5 @@ class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<Not
     fun setNoteList(notesList: List<Note>) {
         this.notesList = notesList
     }
+
 }

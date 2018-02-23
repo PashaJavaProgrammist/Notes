@@ -81,7 +81,7 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
         if (note?.isFavorite == 1) note.isFavorite = 0
         else if (note?.isFavorite == 0) note.isFavorite = 1
         updateNote(note)
-        (context as MainActivity).setListNotes()
+        (context as MainActivity).updateScreen()
     }
 
     private fun onClickPhoto(imageView: ImageView) {

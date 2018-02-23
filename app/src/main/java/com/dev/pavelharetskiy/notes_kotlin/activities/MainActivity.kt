@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         if (spref.contains("idToChange")) idToChangePhoto = spref.getInt("idToChange", -1)
         if (spref.contains("uri")) uri = Uri.parse(spref.getString("uri", ""))
-
+        setListNotes()
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
@@ -260,9 +260,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (fragment != null) {
             try {
                 if (!isFavOnScreen)
-                    fragment?.setNoteList(getAllNotes())
+                    fragment?.updateNoteList(getAllNotes())
                 else if (isFavOnScreen)
-                    fragment?.setNoteList(getFavoriteNotes())
+                    fragment?.updateNoteList(getFavoriteNotes())
             } catch (ex: Exception) {
                 Toast.makeText(this, "error..", Toast.LENGTH_SHORT).show()
             }

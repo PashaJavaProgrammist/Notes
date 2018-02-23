@@ -28,7 +28,7 @@ class DelOrChangeDialog : DialogFragment() {
     private fun onClickDelete() {
         deleteNoteById(idNote)
         if (activity != null) {
-            (activity as MainActivity).setListNotes()
+            (activity as MainActivity).updateScreen()
         }
         Toast.makeText(activity, "Note is deleted", Toast.LENGTH_SHORT).show()
         this.dismiss()

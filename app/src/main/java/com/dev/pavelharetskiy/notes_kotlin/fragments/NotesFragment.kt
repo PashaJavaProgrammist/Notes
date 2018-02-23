@@ -20,8 +20,6 @@ class NotesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_notes, container, false)
 
-        notesAdapter = NotesAdapter(noteList)
-
         view.recyclerViewNotesFragment.layoutManager = LinearLayoutManager(activity)
         view.recyclerViewNotesFragment.adapter = notesAdapter
 
@@ -30,7 +28,16 @@ class NotesFragment : Fragment() {
 
     fun setNoteList(noteList: List<Note>) {
         this.noteList = noteList
+        notesAdapter = NotesAdapter(noteList)
         notesAdapter?.setNoteList(noteList)
         notesAdapter?.notifyDataSetChanged()
     }
+
+    fun updateNoteList(noteList: List<Note>) {
+        this.noteList = noteList
+        notesAdapter?.setNoteList(noteList)
+        notesAdapter?.notifyDataSetChanged()
+    }
+
+
 }
