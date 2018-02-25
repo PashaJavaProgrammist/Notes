@@ -29,7 +29,7 @@ class ChangeDialog : DialogFragment() {
         val noteToChange: Note?
         val title = edTitle?.text.toString()
         val body = edBody?.text.toString()
-        if (title != "") {
+        if (title.isNotEmpty()) {
             noteToChange = getNoteById(idNote)
             noteToChange?.body = body
             noteToChange?.title = title

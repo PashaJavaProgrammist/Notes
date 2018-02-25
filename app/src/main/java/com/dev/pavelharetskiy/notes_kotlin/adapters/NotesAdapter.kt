@@ -21,12 +21,10 @@ class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<Not
         holder?.updateHolder(notesList[position])
     }
 
-    override fun getItemCount(): Int {
-        return notesList.size
-    }
+    override fun getItemCount() = notesList.size
 
     fun setNoteList(notesList: List<Note>) {
         this.notesList = notesList
+        notifyDataSetChanged()
     }
-
 }

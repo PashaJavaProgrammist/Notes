@@ -1,4 +1,5 @@
 package com.dev.pavelharetskiy.notes_kotlin.activities
+
 import android.app.Activity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -42,8 +43,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         spref = getPreferences(MODE_PRIVATE)
 
-        if (spref.contains("idToChange")) idToChangePhoto = spref.getInt("idToChange", -1)
-        if (spref.contains("uri")) uri = Uri.parse(spref.getString("uri", ""))
+        if (spref.contains("idToChange")) {
+            idToChangePhoto = spref.getInt("idToChange", -1)
+        }
+        if (spref.contains("uri")) {
+            uri = Uri.parse(spref.getString("uri", ""))
+        }
         setListNotes()
         setSupportActionBar(toolbar)
 
@@ -52,16 +57,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer_layout.addDrawerListener(toggle)
+                this, drawerlayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawerlayout.addDrawerListener(toggle)
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
     }
 
     override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
+        if (drawerlayout.isDrawerOpen(GravityCompat.START)) {
+            drawerlayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
@@ -75,39 +80,47 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings -> {
-                val openSettingsIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:" + packageName))
-                startActivity(openSettingsIntent)
+                startSetttingsActivity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
+    private fun startSetttingsActivity() {
+        val openSettingsIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:" + packageName))
+        startActivity(openSettingsIntent)
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        fragment = NotesFragment()
-        lateinit var notesList: List<Note>
         when (item.itemId) {
-            R.id.nav_all_notes -> {
-                notesList = getAllNotes()
-                fragment?.setNoteList(notesList)
-                isFavOnScreen = false
-            }
-            R.id.nav_favorite_notes -> {
-                notesList = getFavoriteNotes()
-                fragment?.setNoteList(notesList)
-                isFavOnScreen = true
-            }
+            R.id.nav_all_notes -> setListAllNotesAndDoTransaction(false)
+            R.id.nav_favorite_notes -> setListAllNotesAndDoTransaction(true)
             else -> isFavOnScreen = false
         }
-        doTransaction(fragment)
-        drawer_layout.closeDrawer(GravityCompat.START)
+
+        drawerlayout.closeDrawer(GravityCompat.START)
         return true
     }
 
-    public override fun onSaveInstanceState(outState: Bundle?) {
+    private fun setListAllNotesAndDoTransaction(isListOfFavoriteNotes: Boolean) {
+        fragment = NotesFragment()
+        lateinit var notesList: List<Note>
+        if (isListOfFavoriteNotes) {
+            notesList = getListOfFavoriteNotes()
+            isFavOnScreen = true
+        } else {
+            notesList = getListOfAllNotes()
+            isFavOnScreen = false
+        }
+        fragment?.setNoteList(notesList)
+        doTransaction(fragment)
+    }
+
+    public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putBoolean("isFavorite", isFavOnScreen)
+        outState.putBoolean("isFavorite", isFavOnScreen)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -120,24 +133,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onResume() {
         super.onResume()
         fragment = NotesFragment()
-        try {
-            if (!isFavOnScreen) {
-                fragment?.setNoteList(getAllNotes())
-            } else if (isFavOnScreen) {
-                fragment?.setNoteList(getFavoriteNotes())
-            }
-        } catch (ex: Exception) {
-            //error
-        }
-
+        fragment?.setNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes())
         doTransaction(fragment)
     }
 
     override fun onStop() {
         super.onStop()
         val ed = spref.edit()
-        if (idToChangePhoto != -1) ed.putInt("idToChange", idToChangePhoto)
-        if (uri != null) ed.putString("uri", uri?.path)
+        if (idToChangePhoto != -1) {
+            ed.putInt("idToChange", idToChangePhoto)
+        }
+        if (uri != null) {
+            ed.putString("uri", uri?.path)
+        }
         ed.apply()
     }
 
@@ -194,13 +202,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    fun setListNotes() {
+    private fun setListNotes() {
         try {
             var notes: List<Note>? = null
             if (isFavOnScreen) {
-                notes = getFavoriteNotes()
+                notes = getListOfFavoriteNotes()
             } else if (!isFavOnScreen) {
-                notes = getAllNotes()
+                notes = getListOfAllNotes()
             }
             if (notes != null && fragment != null) {
                 fragment?.setNoteList(notes)
@@ -208,13 +216,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } catch (ex: Exception) {
             //
         }
-
     }
 
     fun startActivityDetail(id: Int) {
         val uriPath = getNoteById(id)?.uri
         if (uriPath != null) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriPath))
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(Uri.parse(uriPath), "image/*")
             startActivity(intent)
         } else {
             Toast.makeText(this, "There is no photo..", Toast.LENGTH_SHORT).show()
@@ -259,10 +267,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun updateScreen() {
         if (fragment != null) {
             try {
-                if (!isFavOnScreen)
-                    fragment?.updateNoteList(getAllNotes())
-                else if (isFavOnScreen)
-                    fragment?.updateNoteList(getFavoriteNotes())
+                if (!isFavOnScreen) {
+                    fragment?.updateNoteList(getListOfAllNotes())
+                } else if (isFavOnScreen) {
+                    fragment?.updateNoteList(getListOfFavoriteNotes())
+                }
             } catch (ex: Exception) {
                 Toast.makeText(this, "error..", Toast.LENGTH_SHORT).show()
             }

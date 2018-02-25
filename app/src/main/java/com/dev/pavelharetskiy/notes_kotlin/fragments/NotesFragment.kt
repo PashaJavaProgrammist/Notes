@@ -11,7 +11,6 @@ import com.dev.pavelharetskiy.notes_kotlin.R
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
 import kotlinx.android.synthetic.main.fragment_notes.view.*
 
-
 class NotesFragment : Fragment() {
 
     private var notesAdapter: NotesAdapter? = null
@@ -28,16 +27,13 @@ class NotesFragment : Fragment() {
 
     fun setNoteList(noteList: List<Note>) {
         this.noteList = noteList
-        notesAdapter = NotesAdapter(noteList)
-        notesAdapter?.setNoteList(noteList)
-        notesAdapter?.notifyDataSetChanged()
+        notesAdapter = NotesAdapter(noteList).apply {
+            setNoteList(noteList)
+        }
     }
 
     fun updateNoteList(noteList: List<Note>) {
         this.noteList = noteList
         notesAdapter?.setNoteList(noteList)
-        notesAdapter?.notifyDataSetChanged()
     }
-
-
 }

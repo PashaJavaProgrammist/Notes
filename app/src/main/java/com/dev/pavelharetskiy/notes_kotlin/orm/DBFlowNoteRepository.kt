@@ -4,11 +4,11 @@ import com.dev.pavelharetskiy.notes_kotlin.models.Note
 import com.dev.pavelharetskiy.notes_kotlin.models.Note_Table
 import com.raizlabs.android.dbflow.sql.language.Select
 
-fun getAllNotes(): List<Note> {
+fun getListOfAllNotes(): List<Note> {
     return Select().from(Note::class.java).queryList()
 }
 
-fun getFavoriteNotes(): List<Note> {
+fun getListOfFavoriteNotes(): List<Note> {
     return Select().from(Note::class.java).where(Note_Table.IsFav.eq(Note.FAVORITE)).queryList()
 }
 

@@ -46,7 +46,7 @@ class CreateDialog : DialogFragment() {
     private fun onClickYes() {
         val titleNote = edTitle?.text.toString()
         val bodyNote = edBody?.text.toString()
-        if (titleNote != "") {
+        if (titleNote.isNotEmpty()) {
             createNote(titleNote, bodyNote)
             if (activity != null) {
                 (activity as MainActivity).updateScreen()

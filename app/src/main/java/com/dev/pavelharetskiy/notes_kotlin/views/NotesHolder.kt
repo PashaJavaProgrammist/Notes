@@ -22,7 +22,6 @@ import android.widget.TextView
 import com.dev.pavelharetskiy.notes_kotlin.orm.getNoteById
 import com.dev.pavelharetskiy.notes_kotlin.orm.updateNote
 
-
 class NotesHolder(private val cardView: CardView, val context: Context) : RecyclerView.ViewHolder(cardView) {
 
     @SuppressLint("SimpleDateFormat")
@@ -30,29 +29,31 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
 
     fun updateHolder(note: Note?) {
         setListeners(cardView)
-        cardView.tvTitle.text = note?.title
-        cardView.tvBody.text = note?.body
-        if (note != null) {
-            cardView.tvTime.text = sdf.format(Date(note.date))
-        }
-        cardView.tvIdInLL.text = note?.id.toString()
-        if (note?.isFavorite == 1) {
-            cardView.iv_isFav.setBackgroundResource(android.R.drawable.btn_star_big_on)
-        } else if (note?.isFavorite == 0) {
-            cardView.iv_isFav.setBackgroundResource(android.R.drawable.btn_star_big_off)
-        }
-        if (note != null) {
-            cardView.iv_isFav.contentDescription = Integer.toString(note.id)
-        }
-        if (note != null) {
-            cardView.ivPhoto_on_card.contentDescription = Integer.toString(note.id)
-        }
-        val anim: Animation = AnimationUtils.loadAnimation(context, R.anim.rotate_anim)
-        cardView.iv_isFav.startAnimation(anim)
         var uri: Uri? = null
-        if (note?.uri != null) {
-            uri = Uri.parse(note.uri)
+        val anim: Animation = AnimationUtils.loadAnimation(context, R.anim.rotate_anim)
+
+        cardView.apply {
+            if (note != null) {
+                if (note.uri != null) {
+                    uri = Uri.parse(note.uri)
+                }
+                tvTitle.text = note.title
+                tvBody.text = note.body
+                tvIdInLL.text = note.id.toString()
+                tvTime.text = sdf.format(Date(note.date))
+                ivPhoto_on_card.contentDescription = Integer.toString(note.id)
+                tvIdInLL.text = note.id.toString()
+                iv_isFav.apply {
+                    contentDescription = Integer.toString(note.id)
+                    when (note.isFavorite) {
+                        0 -> setBackgroundResource(android.R.drawable.btn_star_big_off)
+                        1 -> setBackgroundResource(android.R.drawable.btn_star_big_on)
+                    }
+                }
+                iv_isFav.startAnimation(anim)
+            }
         }
+
         Picasso.with(context)
                 .load(uri)
                 .placeholder(R.mipmap.ic_launcher)
@@ -62,33 +63,33 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
     }
 
     private fun setListeners(cardView: CardView) {
-        cardView.linLayTVs.setOnClickListener { onClickNote(cardView.linLayTVs) }
-        cardView.iv_isFav.setOnClickListener { onClickFav(cardView.iv_isFav) }
-        cardView.ivPhoto_on_card.setOnClickListener { onClickPhoto(cardView.ivPhoto_on_card) }
+        cardView.apply {
+            linLayTVs.setOnClickListener { onClickNote(linLayTVs) }
+            iv_isFav.setOnClickListener { onClickFav(iv_isFav) }
+            ivPhoto_on_card.setOnClickListener { onClickPhoto(ivPhoto_on_card) }
+        }
     }
 
 
     private fun onClickNote(view: View) {
-        val id = Integer.parseInt((view.findViewById<View>(R.id.tvIdInLL) as TextView).text.toString())
         val delOrChangeDialog = DelOrChangeDialog()
-        delOrChangeDialog.idNote = id
+        delOrChangeDialog.idNote = Integer.parseInt((view.findViewById<View>(R.id.tvIdInLL) as TextView).text.toString())
         delOrChangeDialog.show((context as MainActivity).supportFragmentManager, null)
     }
 
     private fun onClickFav(imageView: ImageView) {
-        val idNote = Integer.parseInt(imageView.getContentDescription() as String)
-        val note = getNoteById(idNote)
-        if (note?.isFavorite == 1) note.isFavorite = 0
-        else if (note?.isFavorite == 0) note.isFavorite = 1
+        val note = getNoteById(Integer.parseInt(imageView.contentDescription as String))
+        when (note?.isFavorite) {
+            0 -> note.isFavorite = 1
+            1 -> note.isFavorite = 0
+        }
         updateNote(note)
         (context as MainActivity).updateScreen()
     }
 
     private fun onClickPhoto(imageView: ImageView) {
-        val id = Integer.parseInt(imageView.getContentDescription() as String)
         val photoDialog = PhotoDialog()
-        photoDialog.idNote = id
+        photoDialog.idNote = Integer.parseInt(imageView.getContentDescription() as String)
         photoDialog.show((context as MainActivity).supportFragmentManager, null)
     }
 }
-
