@@ -20,8 +20,6 @@ class ChangeDialog : DialogFragment() {
     private var idNote = -1
     private val instId = "idTOsave"
 
-    private var btYes: TextView? = null
-    private var btNo: TextView? = null
     private var edTitle: TextView? = null
     private var edBody: TextView? = null
 
@@ -74,10 +72,8 @@ class ChangeDialog : DialogFragment() {
                               savedInstanceState: Bundle?): View? {
         dialog.setTitle(R.string.change_note)
         val v = inflater.inflate(R.layout.fragment_create_dialog, container, false)
-        btYes = v.btYesCreate
-        btYes?.setOnClickListener { onClickYes() }
-        btNo = v.btNoCreate
-        btNo?.setOnClickListener { onClickNo() }
+        v.btYesCreate.setOnClickListener { onClickYes() }
+        v.btNoCreate.setOnClickListener { onClickNo() }
         edTitle = v.edTitleCreate
         edBody = v.edBodyCreate
         updateViews()

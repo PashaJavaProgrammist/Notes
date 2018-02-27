@@ -14,12 +14,7 @@ import kotlinx.android.synthetic.main.fragment_create_dialog.view.*
 
 class CreateDialog : DialogFragment() {
 
-    private var btYes: TextView? = null
-
-    private var btNo: TextView? = null
-
     private var edTitle: TextView? = null
-
     private var edBody: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,12 +27,10 @@ class CreateDialog : DialogFragment() {
         val v = inflater.inflate(R.layout.fragment_create_dialog, container, false)
         edBody = v.edBodyCreate
         edTitle = v.edTitleCreate
-        btYes = v.btYesCreate
-        btNo = v.btNoCreate
-        btYes?.setOnClickListener {
+        v.btYesCreate.setOnClickListener {
             onClickYes()
         }
-        btNo?.setOnClickListener {
+        v.btNoCreate.setOnClickListener {
             onClickNo()
         }
         return v

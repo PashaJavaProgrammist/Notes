@@ -17,7 +17,6 @@ import com.dev.pavelharetskiy.notes_kotlin.fragments.NotesFragment
 import java.io.File
 import android.content.Intent
 import android.provider.Settings
-import com.dev.pavelharetskiy.notes_kotlin.models.Note
 import android.support.v4.app.FragmentTransaction
 import android.provider.MediaStore
 import android.widget.Toast
@@ -49,7 +48,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (spref.contains("uri")) {
             uri = Uri.parse(spref.getString("uri", ""))
         }
-        setListNotes()
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
@@ -62,6 +60,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        fragment = NotesFragment()
+        fragment?.setNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes())
+        doTransaction(fragment)
     }
 
     override fun onBackPressed() {
@@ -95,8 +97,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_all_notes -> setListAllNotesAndDoTransaction(false)
-            R.id.nav_favorite_notes -> setListAllNotesAndDoTransaction(true)
+            R.id.nav_all_notes -> setListOfNotesInDrawer(false)
+            R.id.nav_favorite_notes -> setListOfNotesInDrawer(true)
             else -> isFavOnScreen = false
         }
 
@@ -104,18 +106,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun setListAllNotesAndDoTransaction(isListOfFavoriteNotes: Boolean) {
-        fragment = NotesFragment()
-        lateinit var notesList: List<Note>
-        if (isListOfFavoriteNotes) {
-            notesList = getListOfFavoriteNotes()
-            isFavOnScreen = true
-        } else {
-            notesList = getListOfAllNotes()
-            isFavOnScreen = false
-        }
-        fragment?.setNoteList(notesList)
-        doTransaction(fragment)
+    private fun setListOfNotesInDrawer(isListOfFavoriteNotes: Boolean) {
+        isFavOnScreen = isListOfFavoriteNotes
+        updateScreen()
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
@@ -128,13 +121,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (savedInstanceState != null) {
             isFavOnScreen = savedInstanceState.getBoolean("isFavorite", false)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        fragment = NotesFragment()
-        fragment?.setNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes())
-        doTransaction(fragment)
     }
 
     override fun onStop() {
@@ -154,34 +140,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (resultCode == Activity.RESULT_OK) {
                 if (resultIntent == null) {
                     //добавлеие
-                    try {
-                        val note = getNoteById(idToChangePhoto)
-                        val uriStr: String = if (uri.toString()[0] == '/') {
-                            "file://" + uri.toString()
-                        } else {
-                            uri.toString()
-                        }
-
-                        note?.uri = uriStr
-                        updateNote(note)
-                        setListNotes()
-                    } catch (ex: Exception) {
-                        //
+                    val note = getNoteById(idToChangePhoto)
+                    val uriStr: String = if (uri.toString()[0] == '/') {
+                        "file://${uri.toString()}"
+                    } else {
+                        uri.toString()
                     }
 
+                    note?.uri = uriStr
+                    updateNote(note)
+                    updateScreen()
                 }
             }
         } else if (requestCode == requestCodeFotoPick) {//возврат результата от выбора фото
             if (resultCode == Activity.RESULT_OK) {
                 val note = getNoteById(idToChangePhoto)
-                if (resultIntent != null) {
-                    val imageUri = resultIntent.data
-                    if (imageUri != null) {
-                        note?.uri = imageUri.toString()
-                        updateNote(note)
-                        setListNotes()
-                    }
-                }
+                val imageUri = resultIntent?.data
+                note?.uri = imageUri?.toString()
+                updateNote(note)
+                updateScreen()
             }
         }
     }
@@ -200,22 +177,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             //Error
         }
 
-    }
-
-    private fun setListNotes() {
-        try {
-            var notes: List<Note>? = null
-            if (isFavOnScreen) {
-                notes = getListOfFavoriteNotes()
-            } else if (!isFavOnScreen) {
-                notes = getListOfAllNotes()
-            }
-            if (notes != null && fragment != null) {
-                fragment?.setNoteList(notes)
-            }
-        } catch (ex: Exception) {
-            //
-        }
     }
 
     fun startActivityDetail(id: Int) {
@@ -241,20 +202,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val note = getNoteById(id)
         note?.uri = null
         updateNote(note)
-        setListNotes()
+        updateScreen()
     }
 
     fun startPickPhotoActivity(id: Int) {
         idToChangePhoto = id
         val photoAddIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         photoAddIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-
         startActivityForResult(photoAddIntent, requestCodeFotoPick)
     }
 
     private fun generateFileUri() {//генерируем путь к фото
         createDirectory()
-        val file = File(directory.path + "/" + "photo_" + System.currentTimeMillis() + ".jpg")
+        val file = File("${directory.path}/photo_${System.currentTimeMillis()}.jpg")
         uri = Uri.fromFile(file)
     }
 
@@ -265,16 +225,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun updateScreen() {
-        if (fragment != null) {
-            try {
-                if (!isFavOnScreen) {
-                    fragment?.updateNoteList(getListOfAllNotes())
-                } else if (isFavOnScreen) {
-                    fragment?.updateNoteList(getListOfFavoriteNotes())
-                }
-            } catch (ex: Exception) {
-                Toast.makeText(this, "error..", Toast.LENGTH_SHORT).show()
-            }
-        }
+        fragment?.updateNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes())
     }
 }
