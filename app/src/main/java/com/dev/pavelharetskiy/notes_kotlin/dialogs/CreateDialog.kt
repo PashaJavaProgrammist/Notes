@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.fragment_create_dialog.view.*
 
 class CreateDialog : DialogFragment() {
 
-    private var edTitle: TextView? = null
-    private var edBody: TextView? = null
+    private lateinit var edTitle: TextView
+    private lateinit var edBody: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +37,8 @@ class CreateDialog : DialogFragment() {
     }
 
     private fun onClickYes() {
-        val titleNote = edTitle?.text.toString()
-        val bodyNote = edBody?.text.toString()
+        val titleNote = edTitle.text.toString()
+        val bodyNote = edBody.text.toString()
         if (titleNote.isNotEmpty()) {
             createNote(titleNote, bodyNote)
             if (activity != null) {

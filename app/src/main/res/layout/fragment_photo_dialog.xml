@@ -1,128 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:orientation="vertical">
 
-
-    <LinearLayout
+    <TextView
         android:id="@+id/btMake"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_marginTop="12dp"
-        android:background="@android:color/holo_green_light"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        style="@style/port_camera_dialog_button_style"
+        android:drawableLeft="@android:drawable/ic_menu_camera"
+        android:drawableStart="@android:drawable/ic_menu_camera"
+        android:text="@string/make_photo_from_camera" />
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="12dp"
-            android:contentDescription="@string/app_name"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
-
-        <TextView
-            style="@style/camera_dialog_button"
-            android:text="@string/make_photo_from_camera" />
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:id="@+id/btAdd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        style="@style/port_camera_dialog_button_style"
         android:background="@android:color/holo_green_light"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btMake">
+        android:drawableLeft="@android:drawable/ic_menu_add"
+        android:drawableStart="@android:drawable/ic_menu_add"
+        android:text="@string/add_photo_from_file_system" />
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="12dp"
-            android:contentDescription="@string/app_name"
-            app:srcCompat="@android:drawable/ic_menu_add" />
-
-        <TextView
-            style="@style/camera_dialog_button"
-            android:text="@string/add_photo_from_file_system" />
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:id="@+id/btShow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@android:color/holo_green_light"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btAdd">
+        style="@style/port_camera_dialog_button_style"
+        android:drawableLeft="@android:drawable/ic_menu_gallery"
+        android:drawableStart="@android:drawable/ic_menu_gallery"
+        android:text="@string/show_photo" />
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="12dp"
-            android:contentDescription="@string/app_name"
-            app:srcCompat="@android:drawable/ic_menu_gallery" />
-
-        <TextView
-            style="@style/camera_dialog_button"
-            android:text="@string/show_photo" />
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:id="@+id/btDeletePhoto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/holo_green_light"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btShow">
+        style="@style/port_camera_dialog_button_style"
+        android:drawableLeft="@android:drawable/ic_menu_delete"
+        android:drawableStart="@android:drawable/ic_menu_delete"
+        android:text="@string/delete_photo" />
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="12dp"
-            android:contentDescription="@string/app_name"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
-
-        <TextView
-            style="@style/camera_dialog_button"
-            android:text="@string/delete_photo" />
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:id="@+id/btExit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/holo_green_light"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btDeletePhoto">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="12dp"
-            android:contentDescription="@string/app_name"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
-
-        <TextView
-            style="@style/camera_dialog_button"
-            android:text="@string/exit" />
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+        style="@style/port_camera_dialog_button_style"
+        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+        android:drawableStart="@android:drawable/ic_menu_close_clear_cancel"
+        android:text="@string/exit" />
+</LinearLayout>

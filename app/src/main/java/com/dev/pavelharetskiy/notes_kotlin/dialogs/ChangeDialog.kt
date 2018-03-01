@@ -20,13 +20,13 @@ class ChangeDialog : DialogFragment() {
     private var idNote = -1
     private val instId = "idTOsave"
 
-    private var edTitle: TextView? = null
-    private var edBody: TextView? = null
+    private lateinit var edTitle: TextView
+    private lateinit var edBody: TextView
 
     private fun onClickYes() {
         val noteToChange: Note?
-        val title = edTitle?.text.toString()
-        val body = edBody?.text.toString()
+        val title = edTitle.text.toString()
+        val body = edBody.text.toString()
         if (title.isNotEmpty()) {
             noteToChange = getNoteById(idNote)
             noteToChange?.body = body
@@ -83,8 +83,8 @@ class ChangeDialog : DialogFragment() {
     private fun updateViews() {
         if (idNote != -1) {
             val noteForChange = getNoteById(idNote)
-            edTitle?.text = noteForChange?.title
-            edBody?.text = noteForChange?.body
+            edTitle.text = noteForChange?.title
+            edBody.text = noteForChange?.body
         }
     }
 }

@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val requestCodePhotoMake = 4554
     private val requestCodeFotoPick = 4124
 
-    private var fragment: NotesFragment? = null
+    private lateinit var fragment: NotesFragment
     private var isFavOnScreen = false
     private var uri: Uri? = null
     private var idToChangePhoto = -1
@@ -62,8 +62,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         fragment = NotesFragment()
-        fragment?.setNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes())
+        fragment.setNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes())
         doTransaction(fragment)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateScreen()
     }
 
     override fun onBackPressed() {
@@ -193,8 +198,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun startCameraActivity(id: Int) {
         generateFileUri()
         idToChangePhoto = id
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)//запускаем камеру с помощью интента
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
         startActivityForResult(intent, requestCodePhotoMake)
     }
 
@@ -225,6 +229,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun updateScreen() {
-        fragment?.updateNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes())
+        fragment.updateNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes())
     }
 }
