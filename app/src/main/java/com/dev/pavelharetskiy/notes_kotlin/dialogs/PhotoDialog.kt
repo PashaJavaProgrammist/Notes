@@ -76,12 +76,13 @@ class PhotoDialog : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         dialog.setTitle(R.string.choose_action)
-        val v = inflater.inflate(R.layout.fragment_photo_dialog, container, false)
-        v.btMake.setOnClickListener { onClickMake() }
-        v.btAdd.setOnClickListener { onClickAdd() }
-        v.btShow.setOnClickListener { onClickShow() }
-        v.btExit.setOnClickListener { onClickExit() }
-        v.btDeletePhoto.setOnClickListener { onClickDeletePhoto() }
+        val v = inflater.inflate(R.layout.fragment_photo_dialog, container, false).apply {
+            btMake.setOnClickListener { onClickMake() }
+            btAdd.setOnClickListener { onClickAdd() }
+            btShow.setOnClickListener { onClickShow() }
+            btExit.setOnClickListener { onClickExit() }
+            btDeletePhoto.setOnClickListener { onClickDeletePhoto() }
+        }
         return v
     }
 }

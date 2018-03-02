@@ -62,8 +62,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         fragment = NotesFragment()
-        fragment.setNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes())
-        doTransaction(fragment)
+                .apply { setNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes()) }
+                .also { doTransaction(it) }
     }
 
     override fun onResume() {
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun startSetttingsActivity() {
         val openSettingsIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.parse("package:" + packageName))
+                Uri.parse("package:$packageName"))
         startActivity(openSettingsIntent)
     }
 
@@ -173,22 +173,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //===================================================//
 
     private fun doTransaction(fragment: NotesFragment?) {
-        try {
-            val ft = supportFragmentManager.beginTransaction()
-            ft.replace(R.id.frameForFragments, fragment)
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            ft.commit()
-        } catch (ex: Exception) {
-            //Error
+        val ft = supportFragmentManager.beginTransaction().apply {
+            replace(R.id.frameForFragments, fragment)
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         }
-
+        ft.commit()
     }
 
     fun startActivityDetail(id: Int) {
         val uriPath = getNoteById(id)?.uri
         if (uriPath != null) {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.setDataAndType(Uri.parse(uriPath), "image/*")
+            val intent = Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(uriPath), "image/*")
             startActivity(intent)
         } else {
             Toast.makeText(this, "There is no photo..", Toast.LENGTH_SHORT).show()
@@ -212,7 +207,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun startPickPhotoActivity(id: Int) {
         idToChangePhoto = id
         val photoAddIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        photoAddIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+                .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
         startActivityForResult(photoAddIntent, requestCodeFotoPick)
     }
 
@@ -225,7 +220,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun createDirectory() {//создаем папку для фото
         directory = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "NotesAppKotlin")
-        if (!directory.exists()) directory.mkdirs()
+                .apply { if (!exists()) mkdirs() }
     }
 
     fun updateScreen() {
