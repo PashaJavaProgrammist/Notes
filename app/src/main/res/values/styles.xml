@@ -63,7 +63,7 @@
         <item name="android:layout_margin">10dp</item>
     </style>
 
-    <style name="camera_dialog_button">
+    <style name="camera_dialog_button" >
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">12dp</item>
@@ -83,23 +83,23 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="land_camera_dialog_button_style" parent="camera_dialog_button">
+    <style name="land_camera_dialog_button_style" parent="StatefulButtonRoundedBorder.ReverseStates">
         <item name="android:layout_width">200dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_margin">10dp</item>
-        <item name="android:layout_marginEnd">8dp</item>
-        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
         <item name="android:layout_marginTop">8dp</item>
-        <item name="android:background">@android:color/holo_green_light</item>
+        <!--<item name="android:background">@android:color/holo_green_light</item>-->
         <item name="android:drawablePadding">25dp</item>
         <item name="android:padding">9dp</item>
     </style>
 
-    <style name="port_camera_dialog_button_style" parent="camera_dialog_button">
+    <style name="port_camera_dialog_button_style" parent="StatefulButtonRoundedBorder.ReverseStates">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">5dp</item>
-        <item name="android:background">@android:color/holo_green_light</item>
+        <!--<item name="android:background">@android:color/holo_green_light</item>-->
         <item name="android:drawablePadding">25dp</item>
         <item name="android:padding">9dp</item>
         <item name="android:paddingLeft">15dp</item>

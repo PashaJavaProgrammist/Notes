@@ -15,7 +15,6 @@
     <TextView
         android:id="@+id/btAdd"
         style="@style/port_camera_dialog_button_style"
-        android:background="@android:color/holo_green_light"
         android:drawableLeft="@android:drawable/ic_menu_add"
         android:drawableStart="@android:drawable/ic_menu_add"
         android:text="@string/add_photo_from_file_system" />
