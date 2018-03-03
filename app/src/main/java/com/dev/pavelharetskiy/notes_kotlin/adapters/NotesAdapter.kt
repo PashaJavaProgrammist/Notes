@@ -11,14 +11,15 @@ import com.dev.pavelharetskiy.notes_kotlin.models.Note
 
 class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<NotesHolder>() {
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesHolder {
         val context: Context = parent.context
         val cv: CardView = (LayoutInflater.from(context).inflate(R.layout.notes_card_view, parent, false) as CardView)
         return NotesHolder(cv, context)
     }
 
-    override fun onBindViewHolder(holder: NotesHolder?, position: Int) {
-        holder?.updateHolder(notesList[position])
+    override fun onBindViewHolder(holder: NotesHolder, position: Int) {
+        holder.updateHolder(notesList[position])
     }
 
     override fun getItemCount() = notesList.size
