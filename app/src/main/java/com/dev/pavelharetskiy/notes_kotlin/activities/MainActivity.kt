@@ -195,6 +195,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         idToChangePhoto = id
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
         startActivityForResult(intent, requestCodePhotoMake)
+        //TODO: Fix FileUriExposedException
     }
 
     fun delPhotoNote(id: Int) {
