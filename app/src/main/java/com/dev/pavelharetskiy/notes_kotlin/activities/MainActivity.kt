@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.FragmentTransaction
+import android.support.v4.content.FileProvider
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -26,9 +27,6 @@ import com.dev.pavelharetskiy.notes_kotlin.orm.updateNote
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import java.io.File
-import android.support.v4.content.FileProvider
-
-
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -148,22 +146,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {//возврат результата от камеры
         if (requestCode == requestCodePhotoMake) {//результат с камеры
-//            if (resultCode == Activity.RESULT_OK) {        //TODO: Fix status canceled
+            if (resultCode == Activity.RESULT_OK) {
+                //добавлеие
+                val note = getNoteById(idToChangePhoto)
+                val uriStr: String = if (uri.toString()[0] == '/') {
+                    "file://${uri.toString()}"
+                } else {
+                    uri.toString()
+                }
 
-            //  if (resultIntent == null) {
-                    //добавлеие
-                    val note = getNoteById(idToChangePhoto)
-                    val uriStr: String = if (uri.toString()[0] == '/') {
-                        "file://${uri.toString()}"
-                    } else {
-                        uri.toString()
-                    }
-
-                    note?.uri = uriStr
-                    updateNote(note)
-                    updateScreen()
-         //       }
-//            }
+                note?.uri = uriStr
+                updateNote(note)
+                updateScreen()
+            }
         } else if (requestCode == requestCodePhotoPick) {//возврат результата от выбора фото
             if (resultCode == Activity.RESULT_OK) {
                 val note = getNoteById(idToChangePhoto)
@@ -191,7 +186,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val uriPath = getNoteById(id)?.uri
         if (uriPath != null) {
             val intent = Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(uriPath), "image/*")
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivity(intent)
         } else {
             Toast.makeText(this, "There is no photo..", Toast.LENGTH_SHORT).show()
