@@ -1,33 +1,39 @@
 package com.dev.pavelharetskiy.notes_kotlin.activities
 
 import android.app.Activity
+import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.provider.Settings
 import android.support.design.widget.NavigationView
+import android.support.v4.app.FragmentTransaction
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import com.dev.pavelharetskiy.notes_kotlin.R
+import com.dev.pavelharetskiy.notes_kotlin.dialogs.CreateDialog
+import com.dev.pavelharetskiy.notes_kotlin.fragments.NotesFragment
+import com.dev.pavelharetskiy.notes_kotlin.orm.getListOfAllNotes
+import com.dev.pavelharetskiy.notes_kotlin.orm.getListOfFavoriteNotes
+import com.dev.pavelharetskiy.notes_kotlin.orm.getNoteById
+import com.dev.pavelharetskiy.notes_kotlin.orm.updateNote
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import android.content.SharedPreferences
-import android.net.Uri
-import com.dev.pavelharetskiy.notes_kotlin.R
-import com.dev.pavelharetskiy.notes_kotlin.fragments.NotesFragment
 import java.io.File
-import android.content.Intent
-import android.provider.Settings
-import android.support.v4.app.FragmentTransaction
-import android.provider.MediaStore
-import android.widget.Toast
-import android.os.Environment
-import com.dev.pavelharetskiy.notes_kotlin.dialogs.CreateDialog
-import com.dev.pavelharetskiy.notes_kotlin.orm.*
+import android.support.v4.content.FileProvider
+
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val requestCodePhotoMake = 4554
-    private val requestCodeFotoPick = 4124
+    private val requestCodePhotoPick = 4124
 
     private lateinit var fragment: NotesFragment
     private var isFavOnScreen = false
@@ -142,8 +148,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultIntent: Intent?) {//возврат результата от камеры
         if (requestCode == requestCodePhotoMake) {//результат с камеры
-            if (resultCode == Activity.RESULT_OK) {
-                if (resultIntent == null) {
+//            if (resultCode == Activity.RESULT_OK) {        //TODO: Fix status canceled
+
+            //  if (resultIntent == null) {
                     //добавлеие
                     val note = getNoteById(idToChangePhoto)
                     val uriStr: String = if (uri.toString()[0] == '/') {
@@ -155,9 +162,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     note?.uri = uriStr
                     updateNote(note)
                     updateScreen()
-                }
-            }
-        } else if (requestCode == requestCodeFotoPick) {//возврат результата от выбора фото
+         //       }
+//            }
+        } else if (requestCode == requestCodePhotoPick) {//возврат результата от выбора фото
             if (resultCode == Activity.RESULT_OK) {
                 val note = getNoteById(idToChangePhoto)
                 val imageUri = resultIntent?.data
@@ -184,6 +191,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val uriPath = getNoteById(id)?.uri
         if (uriPath != null) {
             val intent = Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(uriPath), "image/*")
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(intent)
         } else {
             Toast.makeText(this, "There is no photo..", Toast.LENGTH_SHORT).show()
@@ -194,8 +202,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         generateFileUri()
         idToChangePhoto = id
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         startActivityForResult(intent, requestCodePhotoMake)
-        //TODO: Fix FileUriExposedException
     }
 
     fun delPhotoNote(id: Int) {
@@ -209,13 +217,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         idToChangePhoto = id
         val photoAddIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-        startActivityForResult(photoAddIntent, requestCodeFotoPick)
+        startActivityForResult(photoAddIntent, requestCodePhotoPick)
     }
 
     private fun generateFileUri() {//генерируем путь к фото
         createDirectory()
         val file = File("${directory.path}/photo_${System.currentTimeMillis()}.jpg")
-        uri = Uri.fromFile(file)
+        uri /*= Uri.fromFile(file)
+
+        val photoURI*/ = FileProvider.getUriForFile(
+                this,
+                "com.dev.pavelharetskiy.notes_kotlin.providers",
+                file)
     }
 
     private fun createDirectory() {//создаем папку для фото

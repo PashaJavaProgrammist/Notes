@@ -34,23 +34,25 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
 
         cardView.apply {
             if (note != null) {
-                if (note.uri != null) {
-                    uri = Uri.parse(note.uri)
+                note.also {
+                if (it.uri != null) {
+                    uri = Uri.parse(it.uri)
                 }
-                tvTitle.text = note.title
-                tvBody.text = note.body
-                tvIdInLL.text = note.id.toString()
-                tvTime.text = sdf.format(Date(note.date))
-                ivPhoto_on_card.contentDescription = Integer.toString(note.id)
-                tvIdInLL.text = note.id.toString()
+                tvTitle.text = it.title
+                tvBody.text = it.body
+                tvIdInLL.text = it.id.toString()
+                tvTime.text = sdf.format(Date(it.date))
+                ivPhoto_on_card.contentDescription = Integer.toString(it.id)
+                tvIdInLL.text = it.id.toString()
                 iv_isFav.apply {
-                    contentDescription = Integer.toString(note.id)
-                    when (note.isFavorite) {
+                    contentDescription = Integer.toString(it.id)
+                    when (it.isFavorite) {
                         0 -> setBackgroundResource(android.R.drawable.btn_star_big_off)
                         1 -> setBackgroundResource(android.R.drawable.btn_star_big_on)
                     }
                 }
                 iv_isFav.startAnimation(anim)
+            }
             }
         }
 

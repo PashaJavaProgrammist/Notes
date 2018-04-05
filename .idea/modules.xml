@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Notes_Kotlin.iml" filepath="$PROJECT_DIR$/Notes_Kotlin.iml" />
-      <module fileurl="file://C:\Users\Taqtile\StudioProjects\Notes_Kotlin\Notes_Kotlin.iml" filepath="C:\Users\Taqtile\StudioProjects\Notes_Kotlin\Notes_Kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Notes_Kotlin.iml" filepath="$PROJECT_DIR$/.idea/Notes_Kotlin.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\Taqtile\StudioProjects\Notes_Kotlin\app\app.iml" filepath="C:\Users\Taqtile\StudioProjects\Notes_Kotlin\app\app.iml" />
     </modules>
   </component>
 </project>
