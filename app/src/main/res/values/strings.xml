@@ -29,4 +29,8 @@
     <string name="change_note">Change note?</string>
     <string name="delete">Delete</string>
     <string name="delete_photo">Delete Photo</string>
+    <string name="rationale">Permissions needed to work with camera and file system</string>
+    <string name="manually">Grant permissions manually in settings</string>
+    <string name="was_granted">Permissions was granted</string>
+    <string name="was_denied">Permissions was denied</string>
 </resources>

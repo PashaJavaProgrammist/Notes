@@ -1,15 +1,22 @@
 package com.dev.pavelharetskiy.notes_kotlin.activities
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.provider.MediaStore
 import android.provider.Settings
 import android.support.design.widget.NavigationView
+import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentTransaction
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -32,6 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val requestCodePhotoMake = 4554
     private val requestCodePhotoPick = 4124
+    private val requestCodePerms = 41225
 
     private lateinit var fragment: NotesFragment
     private var isFavOnScreen = false
@@ -183,22 +191,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun startActivityDetail(id: Int) {
-        val uriPath = getNoteById(id)?.uri
-        if (uriPath != null) {
-            val intent = Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(uriPath), "image/*")
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            startActivity(intent)
+        if (isPermissionGranted()) {
+            val uriPath = getNoteById(id)?.uri
+            if (uriPath != null) {
+                val intent = Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(uriPath), "image/*")
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "There is no photo..", Toast.LENGTH_SHORT).show()
+            }
         } else {
-            Toast.makeText(this, "There is no photo..", Toast.LENGTH_SHORT).show()
+            checkPermissions()
         }
     }
 
     fun startCameraActivity(id: Int) {
-        generateFileUri()
-        idToChangePhoto = id
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        startActivityForResult(intent, requestCodePhotoMake)
+        if (isPermissionGranted()) {
+            generateFileUri()
+            idToChangePhoto = id
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivityForResult(intent, requestCodePhotoMake)
+        } else {
+            checkPermissions()
+        }
     }
 
     fun delPhotoNote(id: Int) {
@@ -235,4 +251,86 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun updateScreen() {
         fragment.updateNoteList(if (isFavOnScreen) getListOfFavoriteNotes() else getListOfAllNotes())
     }
+
+    private fun isPermissionGranted() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+    } else {
+        true
+    }
+
+    private fun requestStoragePermissions() {
+        val perms = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(perms, requestCodePerms)
+        }
+    }
+
+    private fun checkPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (!isPermissionGranted()) {
+
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+                    Toast.makeText(this, getString(R.string.rationale), Toast.LENGTH_LONG).show()
+                    Handler().postDelayed({ requestStoragePermissions() }, 1700L)
+                } else {
+                    // No explanation needed, we can request the permission.
+                    Snackbar.make(main_content, getString(R.string.manually), Snackbar.LENGTH_LONG)
+                            .setAction(getString(R.string.action_settings), { startSetttingsActivity() })
+                            .show()
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            } else {
+                // Permission has already been granted
+            }
+        } else {
+            // Permission doesn't need on <22
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            requestCodePerms -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Toast.makeText(this, getString(R.string.was_granted), Toast.LENGTH_LONG).show()
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, getString(R.string.was_denied), Toast.LENGTH_LONG).show()
+
+                }
+                return
+            }
+
+        // Add other 'when' lines to check for other
+        // permissions this app might request.
+
+            else -> {
+                // Ignore all other requests.
+            }
+        }
+    }
+
 }
