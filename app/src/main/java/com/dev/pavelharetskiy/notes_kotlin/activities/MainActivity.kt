@@ -41,6 +41,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val requestCodePhotoPick = 4124
     private val requestCodePerms = 41225
 
+    private val codeStartCamera = 111
+    private val codeStartDetail = 222
+    private val codeStartPick = 333
+
+    private var code = -1
+
     private lateinit var fragment: NotesFragment
     private var isFavOnScreen = false
     private var uri: Uri? = null
@@ -54,11 +60,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         spref = getPreferences(MODE_PRIVATE)
 
-        if (spref.contains("idToChange")) {
-            idToChangePhoto = spref.getInt("idToChange", -1)
+        if (spref.contains(getString(R.string.key_id))) {
+            idToChangePhoto = spref.getInt(getString(R.string.key_id), -1)
         }
-        if (spref.contains("uri")) {
-            uri = Uri.parse(spref.getString("uri", ""))
+        if (spref.contains(getString(R.string.uri_key))) {
+            uri = Uri.parse(spref.getString(getString(R.string.uri_key), null))
+        }
+        if (spref.contains(getString(R.string.key_code))) {
+            code = spref.getInt(getString(R.string.key_code), -1)
         }
         setSupportActionBar(toolbar)
 
@@ -99,14 +108,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings -> {
-                startSetttingsActivity()
+                startSettingsActivity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun startSetttingsActivity() {
+    private fun startSettingsActivity() {
         val openSettingsIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                 Uri.parse("package:$packageName"))
         startActivity(openSettingsIntent)
@@ -130,13 +139,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean("isFavorite", isFavOnScreen)
+        outState.putBoolean(getString(R.string.isFavorite), isFavOnScreen)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         if (savedInstanceState != null) {
-            isFavOnScreen = savedInstanceState.getBoolean("isFavorite", false)
+            isFavOnScreen = savedInstanceState.getBoolean(getString(R.string.isFavorite), false)
         }
     }
 
@@ -144,10 +153,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onStop()
         val ed = spref.edit()
         if (idToChangePhoto != -1) {
-            ed.putInt("idToChange", idToChangePhoto)
+            ed.putInt(getString(R.string.key_id), idToChangePhoto)
         }
         if (uri != null) {
-            ed.putString("uri", uri?.path)
+            ed.putString(getString(R.string.uri_key), uri?.path)
+        }
+        if (code != -1) {
+            ed.putInt(getString(R.string.key_code), code)
         }
         ed.apply()
     }
@@ -178,6 +190,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            requestCodePerms -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Toast.makeText(this, getString(R.string.was_granted), Toast.LENGTH_LONG).show()
+                    when (code) {
+                        codeStartCamera -> startCameraActivity(idToChangePhoto)
+                        codeStartDetail -> startActivityDetail(idToChangePhoto)
+                        codeStartPick -> startPickPhotoActivity(idToChangePhoto)
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, getString(R.string.was_denied), Toast.LENGTH_LONG).show()
+
+                }
+                return
+            }
+
+        // Add other 'when' lines to check for other
+        // permissions this app might request.
+
+            else -> {
+                // Ignore all other requests.
+            }
+        }
+    }
+
     //===================================================//
     //Metods
     //===================================================//
@@ -191,14 +238,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun startActivityDetail(id: Int) {
+        code = codeStartDetail
+        idToChangePhoto = id
         if (isPermissionGranted()) {
             val uriPath = getNoteById(id)?.uri
             if (uriPath != null) {
-                val intent = Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(uriPath), "image/*")
+                val intent = Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(uriPath), getString(R.string.image_type))
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 startActivity(intent)
             } else {
-                Toast.makeText(this, "There is no photo..", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.no_photo), Toast.LENGTH_SHORT).show()
             }
         } else {
             checkPermissions()
@@ -206,9 +255,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun startCameraActivity(id: Int) {
+        code = codeStartCamera
+        idToChangePhoto = id
         if (isPermissionGranted()) {
             generateFileUri()
-            idToChangePhoto = id
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivityForResult(intent, requestCodePhotoMake)
@@ -225,10 +275,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun startPickPhotoActivity(id: Int) {
+        code = codeStartPick
         idToChangePhoto = id
-        val photoAddIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-        startActivityForResult(photoAddIntent, requestCodePhotoPick)
+        if (isPermissionGranted()) {
+            val photoAddIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    .putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+            startActivityForResult(photoAddIntent, requestCodePhotoPick)
+        } else {
+            checkPermissions()
+        }
     }
 
     private fun generateFileUri() {//генерируем путь к фото
@@ -238,13 +293,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val photoURI*/ = FileProvider.getUriForFile(
                 this,
-                "com.dev.pavelharetskiy.notes_kotlin.providers",
+                getString(R.string.provider_pakage),
                 file)
     }
 
     private fun createDirectory() {//создаем папку для фото
         directory = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "NotesAppKotlin")
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), getString(R.string.folder_name))
                 .apply { if (!exists()) mkdirs() }
     }
 
@@ -289,7 +344,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 } else {
                     // No explanation needed, we can request the permission.
                     Snackbar.make(main_content, getString(R.string.manually), Snackbar.LENGTH_LONG)
-                            .setAction(getString(R.string.action_settings), { startSetttingsActivity() })
+                            .setAction(getString(R.string.action_settings), { startSettingsActivity() })
                             .show()
                     // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                     // app-defined int constant. The callback method gets the
@@ -300,36 +355,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         } else {
             // Permission doesn't need on <22
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            requestCodePerms -> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    Toast.makeText(this, getString(R.string.was_granted), Toast.LENGTH_LONG).show()
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this, getString(R.string.was_denied), Toast.LENGTH_LONG).show()
-
-                }
-                return
-            }
-
-        // Add other 'when' lines to check for other
-        // permissions this app might request.
-
-            else -> {
-                // Ignore all other requests.
-            }
         }
     }
 

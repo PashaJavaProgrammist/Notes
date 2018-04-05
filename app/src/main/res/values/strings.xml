@@ -33,4 +33,12 @@
     <string name="manually">Grant permissions manually in settings</string>
     <string name="was_granted">Permissions was granted</string>
     <string name="was_denied">Permissions was denied</string>
+    <string name="no_photo">There is no photo..</string>
+    <string name="image_type">image/*</string>
+    <string name="key_id">idToChange</string>
+    <string name="uri_key">uri</string>
+    <string name="key_code">code</string>
+    <string name="isFavorite">isFavorite</string>
+    <string name="provider_pakage">com.dev.pavelharetskiy.notes_kotlin.providers</string>
+    <string name="folder_name">NotesAppKotlin</string>
 </resources>
