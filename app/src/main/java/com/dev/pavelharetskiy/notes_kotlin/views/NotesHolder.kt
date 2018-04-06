@@ -1,6 +1,5 @@
 package com.dev.pavelharetskiy.notes_kotlin.views
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.support.v7.widget.CardView
@@ -8,24 +7,23 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import android.widget.TextView
 import com.dev.pavelharetskiy.notes_kotlin.R
 import com.dev.pavelharetskiy.notes_kotlin.activities.MainActivity
 import com.dev.pavelharetskiy.notes_kotlin.dialogs.DelOrChangeDialog
+import com.dev.pavelharetskiy.notes_kotlin.dialogs.PhotoDialog
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
+import com.dev.pavelharetskiy.notes_kotlin.orm.getNoteById
+import com.dev.pavelharetskiy.notes_kotlin.orm.updateNote
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.notes_card_view.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-import com.dev.pavelharetskiy.notes_kotlin.dialogs.PhotoDialog
-import android.widget.ImageView
-import android.widget.TextView
-import com.dev.pavelharetskiy.notes_kotlin.orm.getNoteById
-import com.dev.pavelharetskiy.notes_kotlin.orm.updateNote
 
 class NotesHolder(private val cardView: CardView, val context: Context) : RecyclerView.ViewHolder(cardView) {
 
-    @SuppressLint("SimpleDateFormat")
-    private var sdf: SimpleDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
+    private var sdf: SimpleDateFormat = SimpleDateFormat(context.getString(R.string.format), Locale.getDefault())
 
     fun updateHolder(note: Note?) {
         setListeners(cardView)
@@ -33,8 +31,7 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
         val anim: Animation = AnimationUtils.loadAnimation(context, R.anim.rotate_anim)
 
         cardView.apply {
-            if (note != null) {
-                note.also {
+            note?.also {
                 if (it.uri != null) {
                     uri = Uri.parse(it.uri)
                 }
@@ -53,14 +50,14 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
                 }
                 iv_isFav.startAnimation(anim)
             }
-            }
         }
 
         Picasso.with(context)
                 .load(uri)
-                .placeholder(R.mipmap.ic_launcher)
-                .resize(256, 144)
-                .error(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.no_photo)
+                .resize(256, 256)
+                .error(R.drawable.error)
+                .centerCrop()
                 .into(cardView.ivPhoto_on_card)
     }
 
@@ -72,7 +69,6 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
         }
     }
 
-
     private fun onClickNote(view: View) {
         val delOrChangeDialog = DelOrChangeDialog()
         delOrChangeDialog.idNote = Integer.parseInt((view.findViewById<View>(R.id.tvIdInLL) as TextView).text.toString())
@@ -80,18 +76,19 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
     }
 
     private fun onClickFav(imageView: ImageView) {
-        val note = getNoteById(Integer.parseInt(imageView.contentDescription as String))
-        when (note?.isFavorite) {
-            0 -> note.isFavorite = 1
-            1 -> note.isFavorite = 0
+        getNoteById(Integer.parseInt(imageView.contentDescription as String))?.also {
+            when (it.isFavorite) {
+                0 -> it.isFavorite = 1
+                1 -> it.isFavorite = 0
+            }
+            updateNote(it)
         }
-        updateNote(note)
         (context as MainActivity).updateScreen()
     }
 
     private fun onClickPhoto(imageView: ImageView) {
         val photoDialog = PhotoDialog()
-        photoDialog.idNote = Integer.parseInt(imageView.getContentDescription() as String)
+        photoDialog.idNote = Integer.parseInt(imageView.contentDescription as String)
         photoDialog.show((context as MainActivity).supportFragmentManager, null)
     }
 }

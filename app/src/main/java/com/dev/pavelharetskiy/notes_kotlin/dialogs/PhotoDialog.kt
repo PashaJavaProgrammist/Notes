@@ -13,41 +13,34 @@ import com.dev.pavelharetskiy.notes_kotlin.orm.getNoteById
 import kotlinx.android.synthetic.main.fragment_photo_dialog.view.*
 
 class PhotoDialog : DialogFragment() {
-    var idNote: Int = 0
-    private val instId = "idsave"
+
+    var idNote = -1
+    private val bundleKeyID by lazy { getString(R.string.dialog_id) }
 
     private fun onClickMake() {
-        if (activity != null) {
-            (activity as MainActivity).startCameraActivity(idNote)
-        }
+        (activity as MainActivity).startCameraActivity(idNote)
         this.dismiss()
     }
 
     private fun onClickAdd() {
-        if (activity != null) {
-            (activity as MainActivity).startPickPhotoActivity(idNote)
-        }
+        (activity as MainActivity).startPickPhotoActivity(idNote)
         this.dismiss()
     }
 
     private fun onClickDeletePhoto() {
-        if (activity != null) {
-            (activity as MainActivity).delPhotoNote(idNote)
-        }
+        (activity as MainActivity).delPhotoNote(idNote)
         this.dismiss()
     }
 
     private fun onClickShow() {
         val uri = getNoteById(idNote)?.uri
         try {
-            if (uri != "") {
-                if (activity != null) {
-                    (activity as MainActivity).startActivityDetail(idNote)
-                }
+            if (!uri.isNullOrEmpty()) {
+                (activity as MainActivity).startActivityDetail(idNote)
             }
             this.dismiss()
         } catch (ex: Exception) {
-            Toast.makeText(activity, "Nothing", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, getString(R.string.nothing), Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -63,26 +56,25 @@ class PhotoDialog : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(instId, idNote)
+        outState.putInt(bundleKeyID, idNote)
     }
 
     override fun onViewStateRestored(@Nullable savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        if (savedInstanceState != null) {
-            idNote = savedInstanceState.getInt(instId)
+        if (idNote == -1) {
+            idNote = savedInstanceState?.getInt(bundleKeyID) ?: -1
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         dialog.setTitle(R.string.choose_action)
-        val v = inflater.inflate(R.layout.fragment_photo_dialog, container, false).apply {
+        return inflater.inflate(R.layout.fragment_photo_dialog, container, false).apply {
             btMake.setOnClickListener { onClickMake() }
             btAdd.setOnClickListener { onClickAdd() }
             btShow.setOnClickListener { onClickShow() }
             btExit.setOnClickListener { onClickExit() }
             btDeletePhoto.setOnClickListener { onClickDeletePhoto() }
         }
-        return v
     }
 }

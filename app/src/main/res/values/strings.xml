@@ -41,4 +41,10 @@
     <string name="isFavorite">isFavorite</string>
     <string name="provider_pakage">com.dev.pavelharetskiy.notes_kotlin.providers</string>
     <string name="folder_name">NotesAppKotlin</string>
+    <string name="format">dd.MM.yyyy HH:mm:ss</string>
+    <string name="dialog_id">idtosave</string>
+    <string name="note_is_deleted">Note is deleted</string>
+    <string name="title_not_empty">Title shouldn\'t be empty</string>
+    <string name="note_is_changed">Note is changed</string>
+    <string name="nothing">Nothing</string>
 </resources>

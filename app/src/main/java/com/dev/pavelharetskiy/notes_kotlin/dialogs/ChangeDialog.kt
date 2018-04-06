@@ -1,24 +1,24 @@
 package com.dev.pavelharetskiy.notes_kotlin.dialogs
 
-import android.support.v4.app.DialogFragment
 import android.os.Bundle
 import android.support.annotation.Nullable
-import android.view.ViewGroup
+import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
-import com.dev.pavelharetskiy.notes_kotlin.activities.MainActivity
+import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.dev.pavelharetskiy.notes_kotlin.R
+import com.dev.pavelharetskiy.notes_kotlin.activities.MainActivity
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
 import com.dev.pavelharetskiy.notes_kotlin.orm.getNoteById
 import com.dev.pavelharetskiy.notes_kotlin.orm.updateNote
 import kotlinx.android.synthetic.main.fragment_create_dialog.view.*
 
-
 class ChangeDialog : DialogFragment() {
+
     private var idNote = -1
-    private val instId = "idTOsave"
+    private val bundleKeyID by lazy { getString(R.string.dialog_id) }
 
     private lateinit var edTitle: TextView
     private lateinit var edBody: TextView
@@ -32,13 +32,11 @@ class ChangeDialog : DialogFragment() {
             noteToChange?.body = body
             noteToChange?.title = title
             updateNote(noteToChange)
-            Toast.makeText(activity, "Note is changed", Toast.LENGTH_SHORT).show()
-            if (activity != null) {
-                (activity as MainActivity).updateScreen()
-            }
+            Toast.makeText(activity, getString(R.string.note_is_changed), Toast.LENGTH_SHORT).show()
+            (activity as MainActivity).updateScreen()
             this.dismiss()
         } else {
-            Toast.makeText(activity, "Title shouldn't be empty", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, getString(R.string.title_not_empty), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -57,25 +55,27 @@ class ChangeDialog : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(instId, idNote)
+        outState.putInt(bundleKeyID, idNote)
     }
 
     override fun onViewStateRestored(@Nullable savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        if (savedInstanceState != null) {
-            idNote = savedInstanceState.getInt(instId)
-            updateViews()
+        if (idNote == -1) {
+            idNote = savedInstanceState?.getInt(bundleKeyID) ?: -1
         }
+        updateViews()
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         dialog.setTitle(R.string.change_note)
-        val v = inflater.inflate(R.layout.fragment_create_dialog, container, false)
-        v.btYesCreate.setOnClickListener { onClickYes() }
-        v.btNoCreate.setOnClickListener { onClickNo() }
-        edTitle = v.edTitleCreate
-        edBody = v.edBodyCreate
+        val v = inflater.inflate(R.layout.fragment_create_dialog, container, false).apply {
+            btYesCreate.setOnClickListener { onClickYes() }
+            btNoCreate.setOnClickListener { onClickNo() }
+            edTitle = edTitleCreate
+            edBody = edBodyCreate
+        }
         updateViews()
         return v
     }

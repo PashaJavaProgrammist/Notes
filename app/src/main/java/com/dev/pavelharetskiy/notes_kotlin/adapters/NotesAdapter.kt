@@ -5,12 +5,11 @@ import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.dev.pavelharetskiy.notes_kotlin.views.NotesHolder
 import com.dev.pavelharetskiy.notes_kotlin.R
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
+import com.dev.pavelharetskiy.notes_kotlin.views.NotesHolder
 
 class NotesAdapter(private var notesList: List<Note>) : RecyclerView.Adapter<NotesHolder>() {
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesHolder {
         val context: Context = parent.context
