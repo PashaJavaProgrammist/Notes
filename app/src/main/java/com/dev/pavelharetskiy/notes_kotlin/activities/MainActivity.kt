@@ -58,27 +58,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        spref = getPreferences(MODE_PRIVATE)
-
-        if (spref.contains(getString(R.string.key_id))) {
-            idToChangePhoto = spref.getInt(getString(R.string.key_id), -1)
-        }
-        if (spref.contains(getString(R.string.uri_key))) {
-            uri = Uri.parse(spref.getString(getString(R.string.uri_key), null))
-        }
-        if (spref.contains(getString(R.string.key_code))) {
-            code = spref.getInt(getString(R.string.key_code), -1)
-        }
         setSupportActionBar(toolbar)
+        ActionBarDrawerToggle(
+                this, drawerlayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close).apply {
+            drawerlayout.addDrawerListener(this)
+            syncState()
+        }
+
+        initSearchView()
+        initPreferences()
 
         fab.setOnClickListener {
             CreateDialog().show(supportFragmentManager, null)
         }
-
-        val toggle = ActionBarDrawerToggle(
-                this, drawerlayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawerlayout.addDrawerListener(toggle)
-        toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
 
@@ -356,6 +348,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             // Permission doesn't need on <22
         }
+    }
+
+    private fun initPreferences() {
+        spref = getPreferences(MODE_PRIVATE)
+
+        if (spref.contains(getString(R.string.key_id))) {
+            idToChangePhoto = spref.getInt(getString(R.string.key_id), -1)
+        }
+        if (spref.contains(getString(R.string.uri_key))) {
+            uri = Uri.parse(spref.getString(getString(R.string.uri_key), null))
+        }
+        if (spref.contains(getString(R.string.key_code))) {
+            code = spref.getInt(getString(R.string.key_code), -1)
+        }
+    }
+
+    private fun initSearchView() {
+        
     }
 
 }
