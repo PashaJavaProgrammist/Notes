@@ -21,12 +21,14 @@ import android.support.v4.content.FileProvider
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.dev.pavelharetskiy.notes_kotlin.R
 import com.dev.pavelharetskiy.notes_kotlin.dialogs.CreateDialog
 import com.dev.pavelharetskiy.notes_kotlin.fragments.NotesFragment
+import com.dev.pavelharetskiy.notes_kotlin.models.Note
 import com.dev.pavelharetskiy.notes_kotlin.orm.getListOfAllNotes
 import com.dev.pavelharetskiy.notes_kotlin.orm.getListOfFavoriteNotes
 import com.dev.pavelharetskiy.notes_kotlin.orm.getNoteById
@@ -365,7 +367,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun initSearchView() {
-        
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String?) = true
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val list = if (!isFavOnScreen) getListOfAllNotes() else getListOfFavoriteNotes()
+                val resultList = ArrayList<Note>()
+                for (item in list) {
+                    if (item.title?.contains(newText.toString(), true) == true || item.body?.contains(newText.toString(), true) == true) {
+                        resultList.add(item)
+                    }
+                }
+                fragment.updateNoteList(resultList)
+                return true
+            }
+        })
     }
 
 }
