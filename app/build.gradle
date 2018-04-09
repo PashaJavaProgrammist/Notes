@@ -15,7 +15,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfig{
+    signingConfigs{
         debug{
             keyAlias "key"
             keyPassword "12344321"
