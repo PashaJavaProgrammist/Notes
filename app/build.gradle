@@ -17,7 +17,7 @@ android {
 
     signingConfigs {
         release {
-            keyAlias "key"
+            keyAlias "PublicKey"
             keyPassword "12344321"
             storePassword "12344321"
             storeFile file('C:/Users/Taqtile/StudioProjects/keyStorePublic.jks')
