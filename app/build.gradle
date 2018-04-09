@@ -35,6 +35,7 @@ android {
 //            crashlytics {
 //                ext.betaDistributionApkFilePath = 'C:/Users/Taqtile/.jenkins/workspace/Notes/app/build/app-release.apk'
 //            }
+            ext.enableCrashlytics = true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
