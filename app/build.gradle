@@ -22,6 +22,9 @@ android {
         release {
 //            shrinkResources true
 //            minifyEnabled true
+            crashlytics {
+                ext.betaDistributionApkFilePath = 'C:/Users/Taqtile/StudioProjects/MY/Notes_Kotlin/app/release/apk-realese.apk'
+            }
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
