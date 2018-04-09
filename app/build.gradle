@@ -22,9 +22,9 @@ android {
         release {
 //            shrinkResources true
 //            minifyEnabled true
-            crashlytics {
-                ext.betaDistributionApkFilePath = 'C:/Users/Taqtile/.jenkins/workspace/Notes/app/build/app-release.apk'
-            }
+//            crashlytics {
+//                ext.betaDistributionApkFilePath = 'C:/Users/Taqtile/.jenkins/workspace/Notes/app/build/app-release.apk'
+//            }
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
