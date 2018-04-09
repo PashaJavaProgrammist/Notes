@@ -16,11 +16,6 @@ android {
     }
 
     signingConfigs{
-        debug{
-            keyAlias "key"
-            keyPassword "12344321"
-            storePassword "12344321"
-        }
         release{
             keyAlias "key"
             keyPassword "12344321"
