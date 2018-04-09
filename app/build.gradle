@@ -14,6 +14,20 @@ android {
         versionName "2.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfig{
+        debug{
+            keyAlias "key"
+            keyPassword "12344321"
+            storePassword "12344321"
+        }
+        release{
+            keyAlias "key"
+            keyPassword "12344321"
+            storePassword "12344321"
+        }
+    }
+
     buildTypes {
         debug {
             // Disable fabric build ID generation for debug builds
