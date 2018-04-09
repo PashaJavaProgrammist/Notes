@@ -16,8 +16,8 @@ android {
     }
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
+//            shrinkResources true
+//            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -47,10 +47,10 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
     implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
 
-    compile('com.crashlytics.sdk.android:answers:1.4.1@aar') {
+    implementation('com.crashlytics.sdk.android:answers:1.4.1@aar') {
         transitive = true
     }
-    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }
 
