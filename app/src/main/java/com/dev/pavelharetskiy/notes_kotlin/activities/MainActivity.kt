@@ -25,6 +25,8 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.crashlytics.android.answers.Answers
+import com.crashlytics.android.answers.CustomEvent
 import com.dev.pavelharetskiy.notes_kotlin.R
 import com.dev.pavelharetskiy.notes_kotlin.dialogs.CreateDialog
 import com.dev.pavelharetskiy.notes_kotlin.fragments.NotesFragment
@@ -72,6 +74,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         fab.setOnClickListener {
             CreateDialog().show(supportFragmentManager, null)
+            Answers.getInstance().logCustom(CustomEvent(getString(R.string.new_note)))
         }
 
         nav_view.setNavigationItemSelectedListener(this)

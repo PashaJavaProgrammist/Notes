@@ -48,4 +48,5 @@
     <string name="note_is_changed">Note is changed</string>
     <string name="nothing">Nothing</string>
     <string name="no_notes">There are no notes</string>
+    <string name="new_note">New Note</string>
 </resources>
