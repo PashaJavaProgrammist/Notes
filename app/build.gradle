@@ -17,10 +17,10 @@ android {
 
     signingConfigs {
         release {
-            keyAlias "PublicKey"
-            keyPassword "12344321"
-            storePassword "12344321"
+            keyAlias 'PublicKey'
+            keyPassword '12344321'
             storeFile file('C:/Users/Taqtile/StudioProjects/keyStorePublic.jks')
+            storePassword '12344321'
         }
     }
 
@@ -37,6 +37,7 @@ android {
 //            }
             ext.enableCrashlytics = true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
