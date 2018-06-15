@@ -339,6 +339,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     Toast.makeText(this, getString(R.string.rationale), Toast.LENGTH_LONG).show()
                     Handler().postDelayed({ requestStoragePermissions() }, 1700L)
                 } else {
+                    requestStoragePermissions()
                     // No explanation needed, we can request the permission.
                     Snackbar.make(main_content, getString(R.string.manually), Snackbar.LENGTH_LONG)
                             .setAction(getString(R.string.action_settings)) { startSettingsActivity() }
