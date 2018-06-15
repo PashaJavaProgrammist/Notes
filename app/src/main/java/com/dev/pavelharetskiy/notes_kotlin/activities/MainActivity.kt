@@ -341,7 +341,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 } else {
                     // No explanation needed, we can request the permission.
                     Snackbar.make(main_content, getString(R.string.manually), Snackbar.LENGTH_LONG)
-                            .setAction(getString(R.string.action_settings), { startSettingsActivity() })
+                            .setAction(getString(R.string.action_settings)) { startSettingsActivity() }
                             .show()
                     // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                     // app-defined int constant. The callback method gets the
