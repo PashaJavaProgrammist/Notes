@@ -52,7 +52,7 @@ class NotesHolder(private val cardView: CardView, val context: Context) : Recycl
             }
         }
 
-        Picasso.with(context)
+        Picasso.get()
                 .load(uri)
                 .placeholder(R.drawable.no_photo)
                 .resize(256, 256)
