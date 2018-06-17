@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             drawerlayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
+            finishAffinity()
         }
     }
 
