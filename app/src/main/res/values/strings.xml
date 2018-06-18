@@ -49,7 +49,7 @@
     <string name="nothing">Nothing</string>
     <string name="no_notes">There are no notes</string>
     <string name="new_note">New Note</string>
-    <string name="instructions">Place your fingertip on the Home button to verify your identity</string>
+    <string name="instructions">Place your fingertip on the scanner to verify your identity</string>
     <string name="failed_to_init_chipper">Failed to init Cipher</string>
     <string name="support_not">Your device doesn\'t support fingerprint authentication</string>
     <string name="enable_perm_finger">Please enable the fingerprint permission</string>
