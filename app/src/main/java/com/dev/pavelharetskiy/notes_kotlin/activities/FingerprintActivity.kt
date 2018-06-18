@@ -191,5 +191,9 @@ class FingerprintActivity : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+        finishAffinity()
+    }
+
     private inner class FingerprintException(e: Exception) : Exception(e)
 }

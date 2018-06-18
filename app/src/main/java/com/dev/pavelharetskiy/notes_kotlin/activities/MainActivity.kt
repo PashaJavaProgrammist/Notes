@@ -27,7 +27,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
-import com.dev.pavelharetskiy.notes_kotlin.R
+import com.dev.pavelharetskiy.notes_kotlin.*
 import com.dev.pavelharetskiy.notes_kotlin.dialogs.CreateDialog
 import com.dev.pavelharetskiy.notes_kotlin.fragments.NotesFragment
 import com.dev.pavelharetskiy.notes_kotlin.models.Note
@@ -41,15 +41,7 @@ import java.io.File
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val requestCodePhotoMake = 4554
-    private val requestCodePhotoPick = 4124
-    private val requestCodePerms = 41225
-
-    private val codeStartCamera = 111
-    private val codeStartDetail = 222
-    private val codeStartPick = 333
-
-    private var code = -1
+    private var actionCode = -1
 
     private lateinit var fragment: NotesFragment
     private var isFavOnScreen = false
@@ -93,7 +85,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawerlayout.isDrawerOpen(GravityCompat.START)) {
             drawerlayout.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
             finishAffinity()
         }
     }
@@ -156,8 +147,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (uri != null) {
             ed.putString(getString(R.string.uri_key), uri?.path)
         }
-        if (code != -1) {
-            ed.putInt(getString(R.string.key_code), code)
+        if (actionCode != -1) {
+            ed.putInt(getString(R.string.key_code), actionCode)
         }
         ed.apply()
     }
@@ -198,7 +189,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                     Toast.makeText(this, getString(R.string.was_granted), Toast.LENGTH_LONG).show()
-                    when (code) {
+                    when (actionCode) {
                         codeStartCamera -> startCameraActivity(idToChangePhoto)
                         codeStartDetail -> startActivityDetail(idToChangePhoto)
                         codeStartPick -> startPickPhotoActivity(idToChangePhoto)
@@ -236,7 +227,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun startActivityDetail(id: Int) {
-        code = codeStartDetail
+        actionCode = codeStartDetail
         idToChangePhoto = id
         if (isPermissionGranted()) {
             val uriPath = getNoteById(id)?.uri
@@ -253,7 +244,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun startCameraActivity(id: Int) {
-        code = codeStartCamera
+        actionCode = codeStartCamera
         idToChangePhoto = id
         if (isPermissionGranted()) {
             generateFileUri()
@@ -273,7 +264,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun startPickPhotoActivity(id: Int) {
-        code = codeStartPick
+        actionCode = codeStartPick
         idToChangePhoto = id
         if (isPermissionGranted()) {
             val photoAddIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -367,7 +358,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             uri = Uri.parse(spref.getString(getString(R.string.uri_key), null))
         }
         if (spref.contains(getString(R.string.key_code))) {
-            code = spref.getInt(getString(R.string.key_code), -1)
+            actionCode = spref.getInt(getString(R.string.key_code), -1)
         }
     }
 
