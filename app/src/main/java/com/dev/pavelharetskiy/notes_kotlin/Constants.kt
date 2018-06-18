@@ -13,6 +13,8 @@ const val requestCodePhotoMake = 4554
 const val requestCodePhotoPick = 4124
 const val requestCodePerms = 41225
 
+const val requestCodeW = 412235
+
 const val codeStartCamera = 111
 const val codeStartDetail = 222
 const val codeStartPick = 333
