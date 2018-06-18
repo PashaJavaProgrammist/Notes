@@ -55,4 +55,7 @@
     <string name="enable_perm_finger">Please enable the fingerprint permission</string>
     <string name="no_fingerprint_confg">No fingerprint configured. Please register at least one fingerprint in your device\'s Settings</string>
     <string name="enable_lockscreen_security">Please enable lockscreen security in your device\'s Settings</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="widget_name">Notes</string>
 </resources>

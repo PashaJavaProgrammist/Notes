@@ -1,56 +1,53 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:orientation="vertical"
-    tools:context="com.example.maria.notes.dialogs.CreateDialog">
+    android:padding="8dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edTitleCreate"
-            style="@style/edittext_dialog_style"
-            android:hint="@string/title" />
+    <EditText
+        android:id="@+id/edTitleCreate"
+        style="@style/edittext_dialog_style"
+        android:layout_margin="8dp"
+        android:hint="@string/title"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/edBodyCreate"
-            style="@style/edittext_dialog_style"
-            android:hint="@string/body" />
-    </LinearLayout>
+    <EditText
+        android:id="@+id/edBodyCreate"
+        style="@style/edittext_dialog_style"
+        android:layout_margin="8dp"
+        android:hint="@string/body"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edTitleCreate" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/btYesCreate"
-            style="@style/StatefulButtonRoundedBorder.ReverseStates"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="30dp"
-            android:layout_weight="1"
-            android:text="@string/yes" />
+    <TextView
+        android:id="@+id/btYesCreate"
+        style="@style/StatefulButtonRoundedBorder.ReverseStates"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:text="@string/save"
+        app:layout_constraintEnd_toStartOf="@+id/btNoCreate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edBodyCreate" />
 
-        <TextView
-            android:id="@+id/btNoCreate"
-            style="@style/StatefulButtonRoundedBorder.ReverseStates"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_weight="1"
-            android:text="@string/no" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/btNoCreate"
+        style="@style/StatefulButtonRoundedBorder.ReverseStates"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:text="@string/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btYesCreate"
+        app:layout_constraintTop_toBottomOf="@+id/edBodyCreate" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
