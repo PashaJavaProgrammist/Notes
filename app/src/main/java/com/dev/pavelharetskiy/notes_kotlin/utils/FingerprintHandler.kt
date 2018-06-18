@@ -10,6 +10,10 @@ import android.os.Build
 import android.os.CancellationSignal
 import android.support.v4.app.ActivityCompat
 import android.widget.Toast
+import com.dev.pavelharetskiy.notes_kotlin.ERROR
+import com.dev.pavelharetskiy.notes_kotlin.FAIL
+import com.dev.pavelharetskiy.notes_kotlin.HELP
+import com.dev.pavelharetskiy.notes_kotlin.SUCCESS
 import com.dev.pavelharetskiy.notes_kotlin.activities.MainActivity
 
 @TargetApi(Build.VERSION_CODES.M)
@@ -37,25 +41,25 @@ class FingerprintHandler(private val context: Context) : FingerprintManager.Auth
         //I’m going to display the results of fingerprint authentication as a series of toasts.
         //Here, I’m creating the message that’ll be displayed if an error occurs//
 
-        Toast.makeText(context, "Authentication error\n$errString", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "$ERROR\n$errString", Toast.LENGTH_LONG).show()
     }
 
     override//onAuthenticationFailed is called when the fingerprint doesn’t match with any of the fingerprints registered on the device//
     fun onAuthenticationFailed() {
-        Toast.makeText(context, "Authentication failed", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, FAIL, Toast.LENGTH_LONG).show()
     }
 
     override//onAuthenticationHelp is called when a non-fatal error has occurred. This method provides additional information about the error,
     //so to provide the user with as much feedback as possible I’m incorporating this information into my toast//
     fun onAuthenticationHelp(helpMsgId: Int, helpString: CharSequence) {
-        Toast.makeText(context, "Authentication help\n$helpString", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "$HELP\n$helpString", Toast.LENGTH_LONG).show()
     }
 
     override//onAuthenticationSucceeded is called when a fingerprint has been successfully matched to one of the fingerprints stored on the user’s device//
     fun onAuthenticationSucceeded(
             result: FingerprintManager.AuthenticationResult) {
         context.startActivity(Intent(context, MainActivity::class.java))
-        Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "$SUCCESS!", Toast.LENGTH_LONG).show()
     }
 
 }
