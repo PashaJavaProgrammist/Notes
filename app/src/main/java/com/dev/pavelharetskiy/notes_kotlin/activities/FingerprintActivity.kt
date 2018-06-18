@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.TargetApi
 import android.app.KeyguardManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.fingerprint.FingerprintManager
 import android.os.Build
@@ -91,6 +92,8 @@ class FingerprintActivity : AppCompatActivity() {
                     helper.startAuth(fingerprintManager, cryptoObject)
                 }
             }
+        } else {
+            startActivity(Intent(this, MainActivity::class.java))
         }
     }
 
@@ -125,7 +128,7 @@ class FingerprintActivity : AppCompatActivity() {
             //Generate the key//
             keyGenerator.generateKey()
 
-        } catch (exc: KeyStoreException) {
+        } catch (exc: Exception) {
             exc.printStackTrace()
             throw FingerprintException(exc)
         } catch (exc: NoSuchAlgorithmException) {
